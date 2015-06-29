@@ -6,15 +6,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
 
 
 public class SubmitActivity extends ActionBarActivity {
 
     EditText title, tags, issue, description, customerExperience, editOther, email, teamEmail;
     CheckBox self_service, call_deflection, agent_contact, call_resolution, rework, avoidable_truck, upstream_downstream, cost_savings, other;
+
+    Spinner dropDownSpinner;
+    String[] subMenus = {"Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,11 @@ public class SubmitActivity extends ActionBarActivity {
         upstream_downstream = (CheckBox) findViewById(R.id.upsteam_downstream);
         cost_savings = (CheckBox) findViewById(R.id.cost_savings);
         other = (CheckBox) findViewById(R.id.other);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
+
+        dropDownSpinner = (Spinner) findViewById(R.id.spinner);
+        dropDownSpinner.setAdapter(adapter);
     }
 
     @Override
