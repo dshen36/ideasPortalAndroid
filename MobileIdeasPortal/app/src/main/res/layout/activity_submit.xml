@@ -7,61 +7,111 @@
     tools:context="com.example.brich200.mobileideasportal.SubmitActivity"
     android:orientation="vertical">
 
+
+    <!--<SearchView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/searchView"-->
+        <!--android:layout_gravity="right" />-->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Current Page"
+        android:id="@+id/pageTitle"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Current Page"
+        android:id="@+id/subPages"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
         android:layout_gravity="center_horizontal">
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="429dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Title of Suggestion"
+                android:id="@+id/textView2" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title of Suggestion"
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
                 android:layout_margin="20dp"
                 android:id="@+id/edit_title"
                 android:inputType="text"/>
 
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Potential Tags"
+                android:id="@+id/textView3" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tags"
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
                 android:layout_margin="20dp"
                 android:id="@+id/edit_tags"
                 android:inputType="text"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Current Issue or Opportunity"
+                android:id="@+id/textView4" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="The Current Issue or Opportunity"
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
                 android:layout_margin="20dp"
                 android:id="@+id/edit_issue"
                 android:inputType="text"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Description"
+                android:id="@+id/textView5" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Description"
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
                 android:layout_margin="20dp"
                 android:id="@+id/edit_description"
                 android:inputType="text"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Customer Experience Impact"
+                android:id="@+id/textView6" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Customer Experience Impact"
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
                 android:layout_margin="20dp"
