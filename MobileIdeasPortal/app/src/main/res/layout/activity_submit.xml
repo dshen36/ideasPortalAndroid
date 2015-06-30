@@ -6,16 +6,15 @@
     android:orientation="horizontal">
 
     <GridLayout
-        android:rowCount="2"
-        android:columnCount="4"
+        android:rowCount="1"
+        android:columnCount="3"
         android:id="@+id/navBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#a8a8a8"
+        android:background="#262626"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="7dp"
         android:layout_alignParentEnd="true">
 
 
@@ -41,20 +40,29 @@
             android:layout_marginRight="3dp"
             android:id="@+id/ideasPortalLogo"
             />
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <Spinner
             android:background="#D9FFA500"
             android:layout_width="match_parent"
-            android:layout_height="31dp"
+            android:layout_height="33dp"
             android:id="@+id/spinner"
             android:spinnerMode="dropdown"
             android:textStyle="bold" />
-
+    </GridLayout>
+    <GridLayout
+        android:rowCount="1"
+        android:columnCount="4"
+        android:id="@+id/currentPageBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#a8a8a8"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/navBar"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="7dp"
+        >
         <TextView
-            android:layout_width="128dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/holo_blue_dark"
@@ -67,7 +75,7 @@
             android:layout_below="@+id/ideasPortalLogo"
             android:gravity="center_vertical|center_horizontal"
             android:layout_toRightOf="@+id/pageTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="142dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/holo_blue_dark"
@@ -77,20 +85,24 @@
             android:layout_marginRight="3dp"
             android:id="@+id/subPages"/>
 
-        <Space
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
+            android:layout_height="31dp"
+            android:text="Submit an Idea!"
+            android:id="@+id/SubmitIdea"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/holo_orange_light"/>
         <SearchView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="31dp"
             android:background="#808080"
             android:id="@+id/ideaSearch"/>
+
     </GridLayout>
 
     <ScrollView
         android:layout_weight="5"
-        android:layout_below="@+id/navBar"
+        android:layout_below="@+id/currentPageBar"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
