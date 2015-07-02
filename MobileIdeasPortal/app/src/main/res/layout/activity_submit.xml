@@ -1,4 +1,3 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,9 +17,9 @@
         android:layout_alignParentEnd="true">
 
 
-        android:layout_alignParentTop="true"
+        <!--android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/cxInovationLogo"
+        android:layout_alignBottom="@+id/cxInovationLogo"-->
 
         <ImageView
             android:src="@drawable/cx_innovations"
@@ -91,7 +90,8 @@
             android:text="Submit an Idea!"
             android:id="@+id/SubmitIdea"
             android:layout_gravity="center_horizontal"
-            android:background="@android:color/holo_orange_light"/>
+            android:background="@android:color/holo_orange_light"
+            android:onClick="createIdea"/>
         <SearchView
             android:layout_width="wrap_content"
             android:layout_height="31dp"
@@ -139,7 +139,8 @@
                 android:padding="5dp"
                 android:layout_margin="10dp"
                 android:id="@+id/edit_title"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:hint="Title"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -156,7 +157,8 @@
                 android:padding="5dp"
                 android:layout_margin="10dp"
                 android:id="@+id/edit_tags"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:hint="Tags"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -171,9 +173,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
-                android:layout_margin="1dp"
+                android:layout_margin="10dp"
                 android:id="@+id/edit_issue"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:hint="Issue"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -190,7 +193,8 @@
                 android:padding="5dp"
                 android:layout_margin="10dp"
                 android:id="@+id/edit_description"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:hint="Description"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -207,7 +211,8 @@
                 android:padding="5dp"
                 android:layout_margin="10dp"
                 android:id="@+id/edit_customer_exp_impact"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:hint="Customer Impact"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -225,7 +230,7 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Call Deflection/Avoidance "
+                android:text="Call Deflection/Avoidance"
                 android:id="@+id/call_deflection"
                 android:checked="false" />
 
@@ -307,7 +312,8 @@
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
                 android:layout_margin="10dp"
-                android:id="@+id/edit_email"/>
+                android:id="@+id/edit_email"
+                android:hint="Email"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -322,7 +328,8 @@
                 android:background="@drawable/url_bar"
                 android:padding="5dp"
                 android:layout_margin="10dp"
-                android:id="@+id/edit_team_email"/>
+                android:id="@+id/edit_team_email"
+                android:hint="Teammate Emails"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -330,7 +337,28 @@
                 android:text="Submit"
                 android:id="@+id/submitIdea"
                 android:onClick="submitIdea"
-                android:background="@android:color/holo_orange_light"/>
+                android:background="@android:color/holo_orange_light"
+                android:layout_margin="10dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:id="@+id/deleteIdea"
+                android:onClick="deleteIdea"
+                android:background="@android:color/holo_orange_light"
+                android:visibility="invisible"
+                android:layout_margin="10dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:id="@+id/cancel_button"
+                android:onClick="cancel"
+                android:background="@android:color/holo_orange_light"
+                android:visibility="invisible"
+                android:layout_margin="10dp"/>
 
         </LinearLayout>
 

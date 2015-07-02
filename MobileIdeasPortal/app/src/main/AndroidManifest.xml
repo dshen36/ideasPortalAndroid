@@ -4,13 +4,12 @@
 
     <uses-sdk android:minSdkVersion="11" />
 
-    <android:uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="22" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="22" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -36,7 +35,12 @@
         </activity>
         <activity
             android:name="com.example.brich200.mobileideasportal.SubmitActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
             android:label="@string/title_activity_submit" >
+        </activity>
+        <activity android:name=".EditActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
+            android:label="EditActivity">
         </activity>
     </application>
 

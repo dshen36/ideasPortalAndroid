@@ -5,10 +5,10 @@ import android.content.Context;
 public class Idea {
 
     private static Idea instance;
-    private final Context context;
+    //private final Context context;
 
     private String title, tags, issue, description, customerExperienceImpact,
-            metricsImpact, email, additionalTeamMemberEmail;
+            metricsImpact, email, additionalTeamMemberEmail, lastModified;
     private int status, intelectualPropertyStatus, id, upvotes, downvotes;
 
     public String getTitle(){return title;}
@@ -24,6 +24,7 @@ public class Idea {
     public int getId(){return id;}
     public int getUpVotes(){return upvotes;}
     public int getDownVotes(){return downvotes;}
+    public String getLastModified(){return lastModified;}
 
     public void setTitle(String title) {this.title = title;}
     public void setTags(String tags) {this.tags = tags;}
@@ -38,36 +39,38 @@ public class Idea {
     public void setId(int id) {this.id = id;}
     public void setUpvotes(int upvotes) {this.upvotes = upvotes;}
     public void setDownvotes(int downvotes) {this.downvotes = downvotes;}
+    public void setLastModified(String lastModified) {this.lastModified = lastModified;}
 
-    public static synchronized Idea getInstance(Context context){
+    /*public static synchronized Idea getInstance(Context context){
 
         if(instance == null) {
             instance = new Idea(context);
         }
 
         return instance;
-    }
+    }*/
 
-    public Idea(Context context) {
+    public Idea() {
         setTitle("");
         setTags("");
         setIssue("");
         setDescription("");
         setCustomerExperienceImpact("");
         setMetricsImpact("");
-        setStatus(0);
-        setIntelectualPropertyStatus(0);
+        setStatus(-1);
+        setIntelectualPropertyStatus(-1);
         setEmail("");
         setAdditionalTeamMemberEmail("");
-        setId(0);
-        setUpvotes(0);
-        setDownvotes(0);
-        this.context = context;
+        setId(-1);
+        setUpvotes(-1);
+        setDownvotes(-1);
+        setLastModified(null);
+        //this.context = context;
     }
 
-    public Idea(Context context, String title, String tags, String issue, String description, String customerExperienceImpact,
+    public Idea(String title, String tags, String issue, String description, String customerExperienceImpact,
                 String metricsImpact, int status, int intelectualPropertyStatus, String additionalTeamMemberEmail,
-                int id, int upvotes, int downvotes){
+                int id, int upvotes, int downvotes, String lastModified){
         setTitle(title);
         setTags(tags);
         setIssue(issue);
@@ -81,10 +84,11 @@ public class Idea {
         setId(id);
         setUpvotes(upvotes);
         setDownvotes(downvotes);
-        this.context = context;
+        setLastModified(lastModified);
+        //this.context = context;
     }
 
-    public Idea(Idea database, Context context) {
+    public Idea(Idea database) {
         setTitle(database.title);
         setTags(database.tags);
         setIssue(database.issue);
@@ -98,6 +102,7 @@ public class Idea {
         setId(database.id);
         setUpvotes(database.upvotes);
         setDownvotes(database.downvotes);
-        this.context = context;
+        setLastModified(database.lastModified);
+        //this.context = context;
     }
 }

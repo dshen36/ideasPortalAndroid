@@ -2,36 +2,34 @@ package com.example.brich200.mobileideasportal;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.EventLogTags;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
 
-public class SubmitActivity extends ActionBarActivity {
+public class EditActivity extends ActionBarActivity {
 
     EditText title, tags, issue, description, customerExperience, editOther, email, teamEmail;
     CheckBox self_service, call_deflection, agent_contact, call_resolution, rework, avoidable_truck, upstream_downstream, cost_savings, other;
@@ -39,11 +37,13 @@ public class SubmitActivity extends ActionBarActivity {
     Spinner dropDownSpinner;
     String[] subMenus = {"Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
 
+    String asynchTaskType;
+
     Idea idea;
 
-    SearchView searchIdeas;
+    URL url;
 
-    String asynchTaskType, urlString;
+    Button delete, cancel;
 
     private String baseUrl = "http://comcastideas-interns.azurewebsites.net/api";
 
@@ -73,26 +73,27 @@ public class SubmitActivity extends ActionBarActivity {
         cost_savings = (CheckBox) findViewById(R.id.cost_savings);
         other = (CheckBox) findViewById(R.id.other);
 
+        delete = (Button) findViewById(R.id.deleteIdea);
+        delete.setVisibility(View.VISIBLE);
+        cancel = (Button) findViewById(R.id.cancel_button);
+        cancel.setVisibility(View.VISIBLE);
+
+
+        idea = new Idea();
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
-
-        searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
-        searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                asynchTaskType = "Search";
-                urlString = "http://comcastideas-interns.azurewebsites.net/api/idea?searchQuery=Title&searchParamater=" + query;
-                new CallAPI().execute("value");
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+        idea.setId(getIntent().getIntExtra("id", -1));
+        System.out.println("Id: " + idea.getId());
+        if(idea.getId() == -1) {
+            finish();
+        } else {
+            System.out.println("Start API");
+            asynchTaskType = "Load";
+            new CallAPI().execute("Load");
+        }
     }
 
     @Override
@@ -118,8 +119,8 @@ public class SubmitActivity extends ActionBarActivity {
     }
 
     public void submitIdea(View view) {
-        idea = new Idea();
         idea.setTitle(title.getText().toString());
+        System.out.println("New Title: " + idea.getTitle());
         idea.setTags(tags.getText().toString());
         idea.setIssue(issue.getText().toString());
         idea.setDescription(description.getText().toString());
@@ -131,7 +132,8 @@ public class SubmitActivity extends ActionBarActivity {
         idea.setIntelectualPropertyStatus(1);
 
         asynchTaskType = "Submit";
-        new CallAPI().execute("value");
+        new CallAPI().execute("Submit");
+        //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
 
     private String checkCheckboxes() {
@@ -182,8 +184,11 @@ public class SubmitActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(String... params) {
+            System.out.println("In do in background");
+            System.out.println(asynchTaskType);
 
             if(asynchTaskType.equals("Submit")) {
+
                 String ideaString = "";
                 if (!idea.getTitle().equals("") && !idea.getMetricsImpact().equals("") && idea.getStatus() != -1 && idea.getIntelectualPropertyStatus() != -1 && !idea.getEmail().equals("")) {
                     ideaString = ideaString.concat(String.format("{\"Title\":\"%s\"", idea.getTitle()));
@@ -211,17 +216,17 @@ public class SubmitActivity extends ActionBarActivity {
 
                     try {
 
-                        URL url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setDoOutput(true);
-                        conn.setRequestMethod("POST");
+                        conn.setRequestMethod("PUT");
                         conn.setRequestProperty("Content-Type", "application/json");
 
                         OutputStream os = conn.getOutputStream();
                         os.write(ideaString.getBytes());
                         os.flush();
 
-                        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+                        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                             throw new RuntimeException("Failed : HTTP error code : "
                                     + conn.getResponseCode());
                         }
@@ -250,15 +255,16 @@ public class SubmitActivity extends ActionBarActivity {
                 } else {
                     return "Fail";
                 }
-            } else if(asynchTaskType.equals("Search")){
-                URL url = null;
+            } else if (asynchTaskType.equals("Load")){
                 try {
+                    System.out.println("Loading Edit Activity");
 
-                    url = new URL(urlString);
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                    //url = new URL(url, "/" + idea.getId());
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setDoOutput(true);
                     conn.setRequestMethod("GET");
-                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setRequestProperty("Accept", "application/json");
+
 
                     if (conn.getResponseCode() != 200) {
                         throw new RuntimeException("Failed : HTTP error code : "
@@ -277,7 +283,48 @@ public class SubmitActivity extends ActionBarActivity {
                     }
                     //jsonText= jsonText.substring(1, jsonText.length()-1);
                     System.out.println(jsonText);
+                    try {
+                        JSONObject jsonObject = new JSONObject(jsonText);
+                        idea.setTitle(jsonObject.getString("Title"));
+                        idea.setTags(jsonObject.getString("Tags"));
+                        idea.setIssue(jsonObject.getString("Issue"));
+                        idea.setDescription(jsonObject.getString("Description"));
+                        idea.setCustomerExperienceImpact(jsonObject.getString("CustomerExperienceImpact"));
+                        idea.setMetricsImpact(jsonObject.getString("MetricsImpact"));
+                        idea.setStatus(jsonObject.getInt("Status"));
+                        idea.setIntelectualPropertyStatus(jsonObject.getInt("IntellectualPropertyStatus"));
+                        idea.setEmail(jsonObject.getString("Email"));
+                        idea.setAdditionalTeamMemberEmail(jsonObject.getString("AdditionalTeamMemberEmail"));
+                        idea.setId(jsonObject.getInt("Id"));
+                        idea.setUpvotes((jsonObject.getInt("Votes")));
+                        idea.setLastModified(jsonObject.getString("LastModified"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
+                    conn.disconnect();
+
+                } catch (MalformedURLException e) {
+
+                    e.printStackTrace();
+
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+
+                }
+            } else if (asynchTaskType.equals("Delete")){
+                try {
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoOutput(true);
+                    conn.setRequestMethod("DELETE");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+                    conn.disconnect();
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (ProtocolException e) {
@@ -285,30 +332,112 @@ public class SubmitActivity extends ActionBarActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                return ("Deleted");
+            } else if (asynchTaskType.equals("Cancel")){
+                return "Canceled";
             }
-            return null;
+            return "LoadDone";
         }
 
         protected void onPostExecute(String result) {
             System.out.println("PostExecute");
             if (result.equals("Continue")){
                 System.out.println("Continued");
-                Toast.makeText(SubmitActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
+                Toast.makeText(EditActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
+                //setResult(RESULT_OK, new Intent(EditActivity.this, DisplayMessageActivity.class));
+                //finish();
+                startActivity(new Intent(EditActivity.this, DisplayMessageActivity.class));
             } else if (result.equals("Fail")) {
                 System.out.println("Failed");
-                Toast.makeText(SubmitActivity.this,"Missing Fields, Please Give Your Idea A Title and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditActivity.this,"Missing Fields, Please Give Your Idea A Title and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
+                //setResult(RESULT_CANCELED, new Intent(EditActivity.this, DisplayMessageActivity.class));
+                //finish();
                 return;
-            } else {
-                System.out.println("Else");
+            } else if (result.equals("LoadDone")) {
+                System.out.println("LoadDone");
+                updateEditTexts();
+            } else if (result.equals("Deleted")){
+                System.out.println("Deleted");
+                startActivity(new Intent(EditActivity.this, MyActivity.class));
+            } else if (result.equals("Canceled")){
+                Intent intent = new Intent(EditActivity.this, DisplayMessageActivity.class);
+                intent.putExtra("url", url.toString());
+                startActivity(intent);
             }
 
         }
 
     }
 
+    private void updateEditTexts() {
+        title.setText(idea.getTitle());
+        tags.setText(idea.getTags());
+        issue.setText(idea.getIssue());
+        description.setText(idea.getDescription());
+        customerExperience.setText(idea.getCustomerExperienceImpact());
+        setCheckboxes();
+        email.setText(idea.getEmail());
+        teamEmail.setText(idea.getAdditionalTeamMemberEmail());
+
+    }
+
+    private void setCheckboxes() {
+        String metrics = idea.getMetricsImpact();
+        if(metrics.contains("Improved Self-Service")){
+            metrics = metrics.replace("Improved Self-Service", "");
+            self_service.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Call Deflection/Avoidance")){
+            metrics = metrics.replace("Call Deflection/Avoidance","");
+            call_deflection.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Agent Contact Rate")){
+            metrics = metrics.replace("Agent Contact Rate","");
+            agent_contact.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("First Call Resolution")){
+            metrics = metrics.replace("First Call Resolution","");
+            call_resolution.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Rework")){
+            metrics = metrics.replace("Rework","");
+            rework.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Avoidable Truck Rolls")){
+            metrics = metrics.replace("Avoidable Truck Rolls","");
+            avoidable_truck.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Upstream/Downstream Transmit")){
+            metrics = metrics.replace("Upstream/Downstream Transmit","");
+            upstream_downstream.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Cost Savings")){
+            metrics = metrics.replace("Cost Savings","");
+            cost_savings.setChecked(true);
+        }
+        if(!metrics.isEmpty()){
+            while(metrics.length() != 0 && metrics.charAt(0)==' '){
+                metrics = metrics.substring(1);
+            }
+            if(!metrics.isEmpty()) {
+                other.setChecked(true);
+                editOther.setText(metrics);
+            }
+        }
+    }
+
+    public void deleteIdea(View view) {
+        asynchTaskType = "Delete";
+        new CallAPI().execute("Delete");
+    }
+
     public void createIdea(View view) {
-        startActivity(new Intent(SubmitActivity.this,SubmitActivity.class));
+        startActivity(new Intent(EditActivity.this, SubmitActivity.class));
+    }
+
+    public void cancel(View view) {
+        asynchTaskType = "Cancel";
+        new CallAPI().execute("Cancel");
     }
 
 

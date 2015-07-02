@@ -63,4 +63,8 @@ public class MyActivity extends ActionBarActivity {
     public void submitClicked(View view) {
         startActivity(new Intent(MyActivity.this, SubmitActivity.class));
     }
+
+    public void viewIdeas(View view) {
+        startActivity(new Intent(MyActivity.this, DisplayMessageActivity.class));
+    }
 }
