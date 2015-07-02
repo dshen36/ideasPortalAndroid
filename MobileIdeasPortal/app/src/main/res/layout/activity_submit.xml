@@ -331,34 +331,43 @@
                 android:id="@+id/edit_team_email"
                 android:hint="Teammate Emails"/>
 
-            <Button
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Submit"
-                android:id="@+id/submitIdea"
-                android:onClick="submitIdea"
-                android:background="@android:color/holo_orange_light"
-                android:layout_margin="10dp"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delete"
-                android:id="@+id/deleteIdea"
-                android:onClick="deleteIdea"
-                android:background="@android:color/holo_orange_light"
-                android:visibility="invisible"
-                android:layout_margin="10dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit"
+                    android:id="@+id/submitIdea"
+                    android:onClick="submitIdea"
+                    android:background="@android:color/holo_orange_light"
+                    android:layout_margin="10dp"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:id="@+id/cancel_button"
-                android:onClick="cancel"
-                android:background="@android:color/holo_orange_light"
-                android:visibility="invisible"
-                android:layout_margin="10dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delete"
+                    android:id="@+id/deleteIdea"
+                    android:onClick="deleteIdea"
+                    android:background="@android:color/holo_orange_light"
+                    android:visibility="invisible"
+                    android:layout_margin="10dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    android:id="@+id/cancel_button"
+                    android:onClick="cancel"
+                    android:background="@android:color/holo_orange_light"
+                    android:visibility="invisible"
+                    android:layout_margin="10dp"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

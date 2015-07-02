@@ -38,6 +38,10 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     Idea idea;
 
+    String asychTaskType;
+
+    int[] availableIds;
+
     ProgressDialog progressDialog;
     URL url;
 
@@ -92,6 +96,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
         //Set the text view as the activity layout
         setContentView(textView);*/
+        asychTaskType = "Load";
         new CallAPI().execute("value");
     }
 
@@ -129,64 +134,123 @@ public class DisplayMessageActivity extends ActionBarActivity {
             InputStream in = null;*/
 
             // HTTP Get
-
-            try {
-                if (getIntent().getStringExtra("url") != null){
-                    url = new URL(getIntent().getStringExtra("url"));
-                } else {
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
-                }
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept", "application/json");
-
-
-                if (conn.getResponseCode() != 200) {
-                    throw new RuntimeException("Failed : HTTP error code : "
-                            + conn.getResponseCode());
-                }
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
-
-                String output;
-                String jsonText = "";
-                InputStreamReader reader = new InputStreamReader(conn.getInputStream());
-                System.out.println("Output from Server .... \n");
-                while ((output = br.readLine()) != null) {
-                    jsonText = jsonText + output;
-                }
-                //jsonText= jsonText.substring(1, jsonText.length()-1);
-                System.out.println(jsonText);
+            if(asychTaskType.equals("Load")) {
                 try {
-                    JSONObject jsonObject = new JSONObject(jsonText);
-                    idea.setTitle(jsonObject.getString("Title"));
-                    idea.setTags(jsonObject.getString("Tags"));
-                    idea.setIssue(jsonObject.getString("Issue"));
-                    idea.setDescription(jsonObject.getString("Description"));
-                    idea.setCustomerExperienceImpact(jsonObject.getString("CustomerExperienceImpact"));
-                    idea.setMetricsImpact(jsonObject.getString("MetricsImpact"));
-                    idea.setStatus(jsonObject.getInt("Status"));
-                    idea.setIntelectualPropertyStatus(jsonObject.getInt("IntellectualPropertyStatus"));
-                    idea.setEmail(jsonObject.getString("Email"));
-                    idea.setAdditionalTeamMemberEmail(jsonObject.getString("AdditionalTeamMemberEmail"));
-                    idea.setId(jsonObject.getInt("Id"));
-                    idea.setUpvotes((jsonObject.getInt("Votes")));
-                    idea.setLastModified(jsonObject.getString("LastModified"));
-                } catch (JSONException e) {
+                    if (getIntent().getStringExtra("url") != null) {
+                        url = new URL(getIntent().getStringExtra("url"));
+                    } else if (getIntent().getIntArrayExtra("availableIds") != null) {
+                        availableIds = getIntent().getIntArrayExtra("availableIds");
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + availableIds[0]);
+                    } else {
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                    }
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept", "application/json");
+
+
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+
+                    String output;
+                    String jsonText = "";
+                    InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        jsonText = jsonText + output;
+                    }
+                    //jsonText= jsonText.substring(1, jsonText.length()-1);
+                    System.out.println(jsonText);
+                    try {
+                        JSONObject jsonObject = new JSONObject(jsonText);
+                        idea.setTitle(jsonObject.getString("Title"));
+                        idea.setTags(jsonObject.getString("Tags"));
+                        idea.setIssue(jsonObject.getString("Issue"));
+                        idea.setDescription(jsonObject.getString("Description"));
+                        idea.setCustomerExperienceImpact(jsonObject.getString("CustomerExperienceImpact"));
+                        idea.setMetricsImpact(jsonObject.getString("MetricsImpact"));
+                        idea.setStatus(jsonObject.getInt("Status"));
+                        idea.setIntelectualPropertyStatus(jsonObject.getInt("IntellectualPropertyStatus"));
+                        idea.setEmail(jsonObject.getString("Email"));
+                        idea.setAdditionalTeamMemberEmail(jsonObject.getString("AdditionalTeamMemberEmail"));
+                        idea.setId(jsonObject.getInt("Id"));
+                        idea.setUpvotes((jsonObject.getInt("Votes")));
+                        idea.setLastModified(jsonObject.getString("LastModified"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    conn.disconnect();
+
+                } catch (MalformedURLException e) {
+
                     e.printStackTrace();
+
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+
                 }
+            } else if (asychTaskType.equals("Next")){
+                try {
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + getIntent().getIntArrayExtra("availableIds")[0]);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept", "application/json");
 
-                conn.disconnect();
 
-            } catch (MalformedURLException e) {
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
 
-                e.printStackTrace();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
 
-            } catch (IOException e) {
+                    String output;
+                    String jsonText = "";
+                    InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        jsonText = jsonText + output;
+                    }
+                    //jsonText= jsonText.substring(1, jsonText.length()-1);
+                    System.out.println(jsonText);
+                    try {
+                        JSONObject jsonObject = new JSONObject(jsonText);
+                        idea.setTitle(jsonObject.getString("Title"));
+                        idea.setTags(jsonObject.getString("Tags"));
+                        idea.setIssue(jsonObject.getString("Issue"));
+                        idea.setDescription(jsonObject.getString("Description"));
+                        idea.setCustomerExperienceImpact(jsonObject.getString("CustomerExperienceImpact"));
+                        idea.setMetricsImpact(jsonObject.getString("MetricsImpact"));
+                        idea.setStatus(jsonObject.getInt("Status"));
+                        idea.setIntelectualPropertyStatus(jsonObject.getInt("IntellectualPropertyStatus"));
+                        idea.setEmail(jsonObject.getString("Email"));
+                        idea.setAdditionalTeamMemberEmail(jsonObject.getString("AdditionalTeamMemberEmail"));
+                        idea.setId(jsonObject.getInt("Id"));
+                        idea.setUpvotes((jsonObject.getInt("Votes")));
+                        idea.setLastModified(jsonObject.getString("LastModified"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                e.printStackTrace();
+                    conn.disconnect();
 
+                } catch (MalformedURLException e) {
+
+                    e.printStackTrace();
+
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+
+                }
             }
 
             return null/*resultToDisplay*/;
@@ -225,5 +289,19 @@ public class DisplayMessageActivity extends ActionBarActivity {
         intent.putExtra("id", idea.getId());
         //startActivityForResult(intent,1);
         startActivity(intent);
+    }
+
+    public void getNextIdea(View view) {
+        if (availableIds != null){
+            int temp = availableIds[0];
+            for(int i = 0; i < availableIds.length - 1; i++) {
+                availableIds[i] = availableIds[i + 1];
+                System.out.println(availableIds[i]);
+            }
+            availableIds[availableIds.length - 1] = temp;
+            System.out.println(availableIds[availableIds.length - 1]);
+        }
+        asychTaskType = "Next";
+        new CallAPI().execute("value");
     }
 }

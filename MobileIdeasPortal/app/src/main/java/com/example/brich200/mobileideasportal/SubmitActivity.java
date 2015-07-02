@@ -15,6 +15,7 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,9 +42,13 @@ public class SubmitActivity extends ActionBarActivity {
 
     Idea idea;
 
+    int[] availableIds;
+
     SearchView searchIdeas;
 
     String asynchTaskType, urlString;
+
+    Intent intent;
 
     private String baseUrl = "http://comcastideas-interns.azurewebsites.net/api";
 
@@ -83,7 +88,8 @@ public class SubmitActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 asynchTaskType = "Search";
-                urlString = "http://comcastideas-interns.azurewebsites.net/api/idea?searchQuery=Title&searchParamater=" + query;
+                urlString = "http://comcastideas-interns.azurewebsites.net/api/idea?searchQuery=" + query + "&searchParamater=Title";
+                System.out.println(urlString);
                 new CallAPI().execute("value");
                 return false;
             }
@@ -256,9 +262,9 @@ public class SubmitActivity extends ActionBarActivity {
 
                     url = new URL(urlString);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setDoOutput(true);
                     conn.setRequestMethod("GET");
-                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setRequestProperty("Accept", "application/json");
+
 
                     if (conn.getResponseCode() != 200) {
                         throw new RuntimeException("Failed : HTTP error code : "
@@ -277,6 +283,16 @@ public class SubmitActivity extends ActionBarActivity {
                     }
                     //jsonText= jsonText.substring(1, jsonText.length()-1);
                     System.out.println(jsonText);
+                    JSONArray jsonArray = new JSONArray(jsonText);
+                    availableIds = new int[jsonArray.length()];
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        availableIds[i] = jsonObject.getInt("Id");
+                    }
+                    intent = new Intent(SubmitActivity.this, DisplayMessageActivity.class);
+                    intent.putExtra("availableIds", availableIds);
+
+
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -284,7 +300,10 @@ public class SubmitActivity extends ActionBarActivity {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                return "Searched";
             }
             return null;
         }
@@ -299,6 +318,8 @@ public class SubmitActivity extends ActionBarActivity {
                 System.out.println("Failed");
                 Toast.makeText(SubmitActivity.this,"Missing Fields, Please Give Your Idea A Title and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
                 return;
+            } else if(result.equals("Searched")) {
+                startActivity(intent);
             } else {
                 System.out.println("Else");
             }
