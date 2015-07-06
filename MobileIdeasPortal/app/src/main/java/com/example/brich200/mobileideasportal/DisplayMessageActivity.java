@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 
@@ -36,6 +37,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     int status, intellectualPropertyStatus, id, votes;
 
+    int currentIdea;
+
     Idea idea;
 
     String asychTaskType;
@@ -47,6 +50,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     private Handler uIHandler = new Handler();
     LinearLayout layout;
+
+    boolean vote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,14 +140,18 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
             // HTTP Get
             if(asychTaskType.equals("Load")) {
+                System.out.println("Asynch Task: Loading");
                 try {
                     if (getIntent().getStringExtra("url") != null) {
                         url = new URL(getIntent().getStringExtra("url"));
                     } else if (getIntent().getIntArrayExtra("availableIds") != null) {
                         availableIds = getIntent().getIntArrayExtra("availableIds");
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + availableIds[0]);
+                        currentIdea = availableIds[0];
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
                     } else {
                         url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                        availableIds = new int[]{10};
+                        currentIdea = 10;
                     }
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -150,6 +159,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
 
                     if (conn.getResponseCode() != 200) {
+                        System.out.println("Url:  " + url.toString());
                         throw new RuntimeException("Failed : HTTP error code : "
                                 + conn.getResponseCode());
                     }
@@ -197,8 +207,11 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
                 }
             } else if (asychTaskType.equals("Next")){
+
+                System.out.println("Asynch Task: Next");
                 try {
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + getIntent().getIntArrayExtra("availableIds")[0]);
+                    currentIdea = availableIds[0];
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -251,6 +264,39 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     e.printStackTrace();
 
                 }
+            } else if (asychTaskType.equals("Vote")){
+                System.out.println("Asynch Task: Voting");
+                try {
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea + "?voteUp=" + vote);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("PUT");
+                    conn.setRequestProperty("Accept", "application/json");
+
+                    if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+
+                    String output;
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        System.out.println(output);
+                    }
+
+                    conn.disconnect();
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (ProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                asychTaskType = "Load";
+                new CallAPI().execute("value");
             }
 
             return null/*resultToDisplay*/;
@@ -302,6 +348,18 @@ public class DisplayMessageActivity extends ActionBarActivity {
             System.out.println(availableIds[availableIds.length - 1]);
         }
         asychTaskType = "Next";
+        new CallAPI().execute("value");
+    }
+
+    public void upVote(View view) {
+        asychTaskType = "Vote";
+        vote = true;
+        new CallAPI().execute("value");
+    }
+
+    public void downVote(View view) {
+        asychTaskType = "Vote";
+        vote = false;
         new CallAPI().execute("value");
     }
 }

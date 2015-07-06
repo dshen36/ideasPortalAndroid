@@ -43,11 +43,8 @@ public class SubmitActivity extends ActionBarActivity {
     Idea idea;
 
     int[] availableIds;
-
     SearchView searchIdeas;
-
     String asynchTaskType, urlString;
-
     Intent intent;
 
     private String baseUrl = "http://comcastideas-interns.azurewebsites.net/api";
@@ -125,19 +122,25 @@ public class SubmitActivity extends ActionBarActivity {
 
     public void submitIdea(View view) {
         idea = new Idea();
-        idea.setTitle(title.getText().toString());
-        idea.setTags(tags.getText().toString());
-        idea.setIssue(issue.getText().toString());
-        idea.setDescription(description.getText().toString());
-        idea.setCustomerExperienceImpact(customerExperience.getText().toString());
-        idea.setMetricsImpact(checkCheckboxes());
-        idea.setEmail(email.getText().toString());
-        idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
-        idea.setStatus(1);
-        idea.setIntelectualPropertyStatus(1);
+        if(checkEmails(email.getText().toString(), teamEmail.getText().toString())) {
+            idea.setTitle(title.getText().toString());
+            System.out.println("New Title: " + idea.getTitle());
+            idea.setTags(tags.getText().toString());
+            idea.setIssue(issue.getText().toString());
+            idea.setDescription(description.getText().toString());
+            idea.setCustomerExperienceImpact(customerExperience.getText().toString());
+            idea.setMetricsImpact(checkCheckboxes());
+            idea.setEmail(email.getText().toString());
+            idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
+            idea.setStatus(1);
+            idea.setIntelectualPropertyStatus(1);
 
-        asynchTaskType = "Submit";
-        new CallAPI().execute("value");
+            asynchTaskType = "Submit";
+            new CallAPI().execute("Submit");
+        } else {
+            Toast.makeText(SubmitActivity.this, "Invalid Email or Additional Email, Please Ensure They Are Correct @cable.comcast.com Emails", Toast.LENGTH_LONG).show();
+        }
+        //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
 
     private String checkCheckboxes() {
@@ -182,6 +185,12 @@ public class SubmitActivity extends ActionBarActivity {
             metricsImpact.substring(0, metricsImpact.length() - 2);
         }
         return metricsImpact;
+    }
+
+    public void viewExistingIdeas(View view) {
+        asynchTaskType = "Newest Ideas";
+        new CallAPI().execute("Newest Ideas");
+        //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
 
     private class CallAPI extends AsyncTask<String, String, String> {
@@ -256,11 +265,14 @@ public class SubmitActivity extends ActionBarActivity {
                 } else {
                     return "Fail";
                 }
-            } else if(asynchTaskType.equals("Search")){
+            } else if(asynchTaskType.equals("Search") || asynchTaskType.equals("Newest Ideas")){
                 URL url = null;
                 try {
-
-                    url = new URL(urlString);
+                    if (asynchTaskType.equals("Search")) {
+                        url = new URL(urlString);
+                    } else if (asynchTaskType.equals("Newest Ideas")) {
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                    }
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -330,6 +342,31 @@ public class SubmitActivity extends ActionBarActivity {
 
     public void createIdea(View view) {
         startActivity(new Intent(SubmitActivity.this,SubmitActivity.class));
+    }
+
+    public boolean checkEmails(String email, String teamEmails){
+        boolean valid = true;
+        email = email.trim();
+        valid = testEmail(email);
+        String[] emailArray = strip(teamEmails);
+        int i = 0;
+        while(i < emailArray.length && valid){
+            valid = testEmail(emailArray[i]);
+            i++;
+        }
+        return valid;
+    }
+
+    public static boolean testEmail(String email){
+        return email.matches("[a-zA-Z]+(((\\-)|[._a-zA-Z0-9])*)@cable.comcast.com")||email.matches("");
+    }
+
+    public String[] strip(String unStripped) {
+        String[] stripped = unStripped.split(",");
+        for (int i = 0; i < stripped.length; i++) {
+            stripped[i] = stripped[i].trim();
+        }
+        return stripped;
     }
 
 
