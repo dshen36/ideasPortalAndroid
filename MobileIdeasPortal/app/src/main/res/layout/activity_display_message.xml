@@ -1,172 +1,256 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.brich200.mobileideasportal.DisplayMessageActivity"
-    android:orientation="vertical"
-    android:id="@+id/layout">
+    android:layout_height="match_parent"
+    tools:context="com.example.brich200.mobileideasportal.SubmitActivity"
+    android:orientation="horizontal">
+
+    <GridLayout
+        android:rowCount="1"
+        android:columnCount="3"
+        android:id="@+id/navBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#262626"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+
+        <!--android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/cxInovationLogo"-->
+
+        <ImageView
+            android:src="@drawable/cx_innovations"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/holo_blue_dark"
+            android:id="@+id/cxInovationLogo"/>
+
+        <ImageView
+            android:src="@drawable/ideas_portal_logo"
+            android:layout_width="55dp"
+            android:layout_height="33dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:id="@+id/ideasPortalLogo"
+            />
+
+        <Spinner
+            android:background="#D9FFA500"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:id="@+id/spinner"
+            android:spinnerMode="dropdown"
+            android:textStyle="bold" />
+    </GridLayout>
+    <GridLayout
+        android:rowCount="1"
+        android:columnCount="4"
+        android:id="@+id/currentPageBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#a8a8a8"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/navBar"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="7dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textAlignment="center"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Ideas: "
+            android:id="@+id/pageTitle" />
+
+        <TextView
+            android:layout_below="@+id/ideasPortalLogo"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_toRightOf="@+id/pageTitle"
+            android:layout_width="142dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textAlignment="center"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:id="@+id/subPages"
+            android:text="Individual Idea" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:text="Submit an Idea!"
+            android:id="@+id/SubmitIdea"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/holo_orange_light"
+            android:onClick="createIdea"/>
+        <!--<SearchView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="31dp"-->
+            <!--android:background="#808080"-->
+            <!--android:id="@+id/ideaSearch"/>-->
+
+    </GridLayout>
 
     <!--<TextView android:text="@string/hello_world" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />-->
 
     <LinearLayout
+        android:layout_below="@+id/currentPageBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:id="@+id/title_bar"
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Title:"/>
 
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4sp"
+            android:layout_marginBottom="7sp">
+            <TextView
+                android:textColor="#0080ff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Votes:"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tags:"/>
+                android:text="Status:New"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_below="@+id/title_bar"
 
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
             <TextView
+                android:textColor="#0080ff"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Issue:"/>
+                android:layout_marginBottom="7sp"
+                android:text="Tags: ie) lab week july 2015"/>
 
             <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#800000"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Issue/Opportunity:"/>
+
+            <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#800000"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description:"/>
 
             <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#800000"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Customer Experience Impact:"/>
 
             <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#800000"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Metrics Impact:"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status:"/>
 
             <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#800000"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Intellectual Property Status:"/>
 
             <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#0080ff"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Email:"/>
 
             <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#0080ff"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Additional Teammate Emails:"/>
 
             <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#0080ff"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Id:"/>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Votes:"/>
-
-            <TextView
+                android:layout_marginTop="3.5sp"
+                android:layout_marginBottom="3.5sp"
+                android:textColor="#800000"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Last Modified:"/>
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/title"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tags"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/current_issue"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/description"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/customer_exp_imp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/metrics"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/status"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/intellectual_property_status"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/email"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/teammates_email" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/votes"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/last_modified"/>
-
-        </LinearLayout>
-
     </LinearLayout>
 
     <Button
+        android:layout_marginTop="7.5sp"
+        android:layout_marginBottom="3.5sp"
+        android:textColor="#e59400"
+        android:background="#ffdb99"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit Contents"
-        android:onClick="editContents"/>
+        android:onClick="editContents"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-</LinearLayout>
+</RelativeLayout>
