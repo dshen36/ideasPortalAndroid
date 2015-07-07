@@ -9,13 +9,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +31,17 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
 
 public class EditActivity extends ActionBarActivity {
 
@@ -35,11 +49,17 @@ public class EditActivity extends ActionBarActivity {
     CheckBox self_service, call_deflection, agent_contact, call_resolution, rework, avoidable_truck, upstream_downstream, cost_savings, other;
 
     Spinner dropDownSpinner;
-    String[] subMenus = {"Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String[] subMenus = {"(Select Page)", "Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
 
-    String asynchTaskType;
+    private static int RESULT_LOAD_IMAGE = 1;
+
+    String asynchTaskType, urlString;
 
     Idea idea;
+
+    int[] availableIds;
+    SearchView searchIdeas;
+    Intent intent;
 
     URL url;
 
@@ -85,6 +105,8 @@ public class EditActivity extends ActionBarActivity {
 
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
+        dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+
         idea.setId(getIntent().getIntExtra("id", -1));
         System.out.println("Id: " + idea.getId());
         if(idea.getId() == -1) {
@@ -94,6 +116,60 @@ public class EditActivity extends ActionBarActivity {
             asynchTaskType = "Load";
             new CallAPI().execute("Load");
         }
+
+        searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
+        searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                asynchTaskType = "Search";
+                urlString = "http://comcastideas-interns.azurewebsites.net/api/idea?searchQuery=" + query + "&searchParamater=Title";
+                System.out.println(urlString);
+                new CallAPI().execute("value");
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        Button buttonLoadImage = (Button) findViewById(R.id.buttonLoadPicture);
+        buttonLoadImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            ImageView imageView = (ImageView) findViewById(R.id.imgView);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+        }
+
+
     }
 
     @Override
@@ -119,20 +195,24 @@ public class EditActivity extends ActionBarActivity {
     }
 
     public void submitIdea(View view) {
-        idea.setTitle(title.getText().toString());
-        System.out.println("New Title: " + idea.getTitle());
-        idea.setTags(tags.getText().toString());
-        idea.setIssue(issue.getText().toString());
-        idea.setDescription(description.getText().toString());
-        idea.setCustomerExperienceImpact(customerExperience.getText().toString());
-        idea.setMetricsImpact(checkCheckboxes());
-        idea.setEmail(email.getText().toString());
-        idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
-        idea.setStatus(1);
-        idea.setIntelectualPropertyStatus(1);
+        if(checkEmails(email.getText().toString(), teamEmail.getText().toString())) {
+            idea.setTitle(title.getText().toString());
+            System.out.println("New Title: " + idea.getTitle());
+            idea.setTags(tags.getText().toString());
+            idea.setIssue(issue.getText().toString());
+            idea.setDescription(description.getText().toString());
+            idea.setCustomerExperienceImpact(customerExperience.getText().toString());
+            idea.setMetricsImpact(checkCheckboxes());
+            idea.setEmail(email.getText().toString());
+            idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
+            idea.setStatus(1);
+            idea.setIntelectualPropertyStatus(1);
 
-        asynchTaskType = "Submit";
-        new CallAPI().execute("Submit");
+            asynchTaskType = "Submit";
+            new CallAPI().execute("Submit");
+        } else {
+            Toast.makeText(EditActivity.this, "Invalid Email or Additional Email, Please Ensure They Are Correct @cable.comcast.com Emails", Toast.LENGTH_LONG).show();
+        }
         //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
 
@@ -178,6 +258,10 @@ public class EditActivity extends ActionBarActivity {
             metricsImpact.substring(0, metricsImpact.length() - 2);
         }
         return metricsImpact;
+    }
+
+    public void viewExistingIdeas(View view) {
+        startActivity(new Intent(EditActivity.this, DisplayMessageActivity.class));
     }
 
     private class CallAPI extends AsyncTask<String, String, String> {
@@ -335,6 +419,54 @@ public class EditActivity extends ActionBarActivity {
                 return ("Deleted");
             } else if (asynchTaskType.equals("Cancel")){
                 return "Canceled";
+            }else if(asynchTaskType.equals("Search")){
+                URL url = null;
+                try {
+
+                    url = new URL(urlString);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept", "application/json");
+
+
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+
+                    String output;
+                    String jsonText = "";
+                    InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        jsonText = jsonText + output;
+                    }
+                    //jsonText= jsonText.substring(1, jsonText.length()-1);
+                    System.out.println(jsonText);
+                    JSONArray jsonArray = new JSONArray(jsonText);
+                    availableIds = new int[jsonArray.length()];
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        availableIds[i] = jsonObject.getInt("Id");
+                    }
+                    intent = new Intent(EditActivity.this, DisplayMessageActivity.class);
+                    intent.putExtra("availableIds", availableIds);
+
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (ProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return "Searched";
             }
             return "LoadDone";
         }
@@ -362,6 +494,8 @@ public class EditActivity extends ActionBarActivity {
             } else if (result.equals("Canceled")){
                 Intent intent = new Intent(EditActivity.this, DisplayMessageActivity.class);
                 intent.putExtra("url", url.toString());
+                startActivity(intent);
+            } else if(result.equals("Searched")) {
                 startActivity(intent);
             }
 
@@ -439,6 +573,46 @@ public class EditActivity extends ActionBarActivity {
         asynchTaskType = "Cancel";
         new CallAPI().execute("Cancel");
     }
+
+    public boolean checkEmails(String email, String teamEmails){
+        boolean valid = true;
+        email = email.trim();
+        valid = testEmail(email);
+        String[] emailArray = strip(teamEmails);
+        int i = 0;
+        while(i < emailArray.length && valid){
+            valid = testEmail(emailArray[i]);
+            i++;
+        }
+        return valid;
+    }
+
+    public static boolean testEmail(String email){
+        return email.matches("[a-zA-Z]+(((\\-)|[._a-zA-Z0-9])*)@cable.comcast.com")||email.matches("");
+    }
+
+    public String[] strip(String unStripped) {
+        String[] stripped = unStripped.split(",");
+        for (int i = 0; i < stripped.length; i++) {
+            stripped[i] = stripped[i].trim();
+        }
+        return stripped;
+    }
+
+    AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            System.out.println(parent.getItemAtPosition(position).toString());
+            if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
+                viewExistingIdeas(dropDownSpinner);
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+        }
+    };
 
 
 }

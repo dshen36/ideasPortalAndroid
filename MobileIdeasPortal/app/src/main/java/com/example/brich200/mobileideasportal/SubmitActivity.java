@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -31,23 +32,33 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
 
 public class SubmitActivity extends ActionBarActivity {
 
-    EditText title, tags, issue, description, customerExperience, editOther, email, teamEmail;
+    EditText title, tags, issue, description, customerExperience, editOther, email, teamEmail, orgaization;
     CheckBox self_service, call_deflection, agent_contact, call_resolution, rework, avoidable_truck, upstream_downstream, cost_savings, other;
 
     Spinner dropDownSpinner;
-    String[] subMenus = {"Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String[] subMenus = {"(Select Page)","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+
+    private static int RESULT_LOAD_IMAGE = 1;
 
     Idea idea;
 
     int[] availableIds;
-
     SearchView searchIdeas;
-
     String asynchTaskType, urlString;
-
     Intent intent;
 
     private String baseUrl = "http://comcastideas-interns.azurewebsites.net/api";
@@ -67,6 +78,7 @@ public class SubmitActivity extends ActionBarActivity {
         editOther = (EditText) findViewById(R.id.edit_other);
         email = (EditText) findViewById(R.id.edit_email);
         teamEmail = (EditText) findViewById(R.id.edit_team_email);
+        orgaization = (EditText) findViewById(R.id.edit_organization);
 
         self_service = (CheckBox) findViewById(R.id.self_Service);
         call_deflection = (CheckBox) findViewById(R.id.call_deflection);
@@ -82,6 +94,7 @@ public class SubmitActivity extends ActionBarActivity {
 
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
+        dropDownSpinner.setOnItemSelectedListener(spinnerListener);
 
         searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
         searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -99,6 +112,43 @@ public class SubmitActivity extends ActionBarActivity {
                 return false;
             }
         });
+
+        Button buttonLoadImage = (Button) findViewById(R.id.buttonLoadPicture);
+        buttonLoadImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            ImageView imageView = (ImageView) findViewById(R.id.imgView);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+        }
+
+
     }
 
     @Override
@@ -125,19 +175,25 @@ public class SubmitActivity extends ActionBarActivity {
 
     public void submitIdea(View view) {
         idea = new Idea();
-        idea.setTitle(title.getText().toString());
-        idea.setTags(tags.getText().toString());
-        idea.setIssue(issue.getText().toString());
-        idea.setDescription(description.getText().toString());
-        idea.setCustomerExperienceImpact(customerExperience.getText().toString());
-        idea.setMetricsImpact(checkCheckboxes());
-        idea.setEmail(email.getText().toString());
-        idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
-        idea.setStatus(1);
-        idea.setIntelectualPropertyStatus(1);
+        if(checkEmails(email.getText().toString(), teamEmail.getText().toString())) {
+            idea.setTitle(title.getText().toString());
+            System.out.println("New Title: " + idea.getTitle());
+            idea.setTags(tags.getText().toString());
+            idea.setIssue(issue.getText().toString());
+            idea.setDescription(description.getText().toString());
+            idea.setCustomerExperienceImpact(customerExperience.getText().toString());
+            idea.setMetricsImpact(checkCheckboxes());
+            idea.setEmail(email.getText().toString());
+            idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
+            idea.setStatus(1);
+            idea.setIntelectualPropertyStatus(1);
 
-        asynchTaskType = "Submit";
-        new CallAPI().execute("value");
+            asynchTaskType = "Submit";
+            new CallAPI().execute("Submit");
+        } else {
+            Toast.makeText(SubmitActivity.this, "Invalid Email or Additional Email, Please Ensure They Are Correct @cable.comcast.com Emails", Toast.LENGTH_LONG).show();
+        }
+        //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
 
     private String checkCheckboxes() {
@@ -182,6 +238,12 @@ public class SubmitActivity extends ActionBarActivity {
             metricsImpact.substring(0, metricsImpact.length() - 2);
         }
         return metricsImpact;
+    }
+
+    public void viewExistingIdeas(View view) {
+        asynchTaskType = "Newest Ideas";
+        new CallAPI().execute("Newest Ideas");
+        //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
 
     private class CallAPI extends AsyncTask<String, String, String> {
@@ -256,11 +318,14 @@ public class SubmitActivity extends ActionBarActivity {
                 } else {
                     return "Fail";
                 }
-            } else if(asynchTaskType.equals("Search")){
+            } else if(asynchTaskType.equals("Search") || asynchTaskType.equals("Newest Ideas")){
                 URL url = null;
                 try {
-
-                    url = new URL(urlString);
+                    if (asynchTaskType.equals("Search")) {
+                        url = new URL(urlString);
+                    } else if (asynchTaskType.equals("Newest Ideas")) {
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                    }
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -331,6 +396,46 @@ public class SubmitActivity extends ActionBarActivity {
     public void createIdea(View view) {
         startActivity(new Intent(SubmitActivity.this,SubmitActivity.class));
     }
+
+    public boolean checkEmails(String email, String teamEmails){
+        boolean valid = true;
+        email = email.trim();
+        valid = testEmail(email);
+        String[] emailArray = strip(teamEmails);
+        int i = 0;
+        while(i < emailArray.length && valid){
+            valid = testEmail(emailArray[i]);
+            i++;
+        }
+        return valid;
+    }
+
+    public static boolean testEmail(String email){
+        return email.matches("[a-zA-Z]+(((\\-)|[._a-zA-Z0-9])*)@cable.comcast.com")||email.matches("");
+    }
+
+    public String[] strip(String unStripped) {
+        String[] stripped = unStripped.split(",");
+        for (int i = 0; i < stripped.length; i++) {
+            stripped[i] = stripped[i].trim();
+        }
+        return stripped;
+    }
+
+    AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            System.out.println(parent.getItemAtPosition(position).toString());
+            if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
+                viewExistingIdeas(dropDownSpinner);
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+        }
+    };
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.brich200.mobileideasportal;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,9 +9,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
 
 public class MyActivity extends ActionBarActivity {
     public final static String EXTRA_MESSAGE = "com.example.brich200.myfirstapp.MESSAGE";
+    String asynchTaskType;
+    int [] availableIds;
+    Intent intent;
+    String urlString;
 
 
 
@@ -18,6 +35,7 @@ public class MyActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        urlString = "http://comcastideas-interns.azurewebsites.net/api/idea";
     }
 
     @Override
@@ -49,22 +67,80 @@ public class MyActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /* sends a message when the button is clicked
-     */
-/*    public void sendMessage(View view) {
-        //respond to the button
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.title);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }*/
+    private class CallAPI extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            System.out.println("In do in background");
+            System.out.println(asynchTaskType);
+
+            if(asynchTaskType.equals("Ideas")){
+                URL url = null;
+                try {
+
+                    url = new URL(urlString);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept", "application/json");
+
+
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+
+                    String output;
+                    String jsonText = "";
+                    InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        jsonText = jsonText + output;
+                    }
+                    //jsonText= jsonText.substring(1, jsonText.length()-1);
+                    System.out.println(jsonText);
+                    JSONArray jsonArray = new JSONArray(jsonText);
+                    availableIds = new int[jsonArray.length()];
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        availableIds[i] = jsonObject.getInt("Id");
+                    }
+                    intent = new Intent(MyActivity.this, DisplayMessageActivity.class);
+                    intent.putExtra("availableIds", availableIds);
+
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (ProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return "Searched";
+            }
+            return "LoadDone";
+
+        }
+
+        protected void onPostExecute(String result) {
+            if(result.equals("Searched")) {
+                startActivity(intent);
+            }
+        }
+    }
 
     public void submitClicked(View view) {
         startActivity(new Intent(MyActivity.this, SubmitActivity.class));
     }
 
     public void viewIdeas(View view) {
-        startActivity(new Intent(MyActivity.this, DisplayMessageActivity.class));
+        asynchTaskType = "Ideas";
+        new CallAPI().execute("Ideas");
+        //startActivity(new Intent(MyActivity.this, DisplayMessageActivity.class));
     }
 }

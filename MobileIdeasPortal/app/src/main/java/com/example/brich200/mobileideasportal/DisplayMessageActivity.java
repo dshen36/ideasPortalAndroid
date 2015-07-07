@@ -9,7 +9,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -23,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 
@@ -32,13 +37,18 @@ public class DisplayMessageActivity extends ActionBarActivity {
             statusText, intellectualPropertyStatusText, emailText, teammatesEmailText, idText, votesText,
             lastModifiedText;
 
+    Spinner dropDownSpinner;
+    String[] subMenus = {"(Select Page)","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+
     String title, tags, issue, description, customerExperienceImpact, metrics, email, teammatesEmail, lastModified;
 
     int status, intellectualPropertyStatus, id, votes;
 
+    int currentIdea;
+
     Idea idea;
 
-    String asychTaskType;
+    String asynchTaskType;
 
     int[] availableIds;
 
@@ -46,14 +56,16 @@ public class DisplayMessageActivity extends ActionBarActivity {
     URL url;
 
     private Handler uIHandler = new Handler();
-    LinearLayout layout;
+    RelativeLayout layout;
+
+    boolean vote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         progressDialog = ProgressDialog.show(this, "Retrieving Idea", "Please Wait While We Retrieve The Idea");
         setContentView(R.layout.activity_display_message);
-        layout =(LinearLayout) findViewById(R.id.layout);
+        layout =(RelativeLayout) findViewById(R.id.layout);
         layout.setFocusable(true);
         idea = new Idea();
 
@@ -74,29 +86,13 @@ public class DisplayMessageActivity extends ActionBarActivity {
         votesText = (TextView) findViewById(R.id.votes);
         lastModifiedText = (TextView) findViewById(R.id.last_modified);
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
+        dropDownSpinner = (Spinner) findViewById(R.id.spinner);
+        dropDownSpinner.setAdapter(adapter);
+        dropDownSpinner.setOnItemSelectedListener(spinnerListener);
 
-        /*title.setText(idea.getTitle());
-        tags.setText(idea.getTags());
-        issue.setText(idea.getIssue());
-        description.setText(idea.getDescription());
-        customerExperienceImpact.setText(idea.getCustomerExperienceImpact());
-        metrics.setText(idea.getMetricsImpact());
-        email.setText(idea.getEmail());
-        teammatesEmail.setText(idea.getAdditionalTeamMemberEmail());*/
-
-        /*//get the message from the intent
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(MyActivity.EXTRA_MESSAGE);
-
-        //create the text view
-        TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        textView.setText(message);
-
-        //Set the text view as the activity layout
-        setContentView(textView);*/
-        asychTaskType = "Load";
+        asynchTaskType = "Load";
         new CallAPI().execute("value");
     }
 
@@ -134,15 +130,23 @@ public class DisplayMessageActivity extends ActionBarActivity {
             InputStream in = null;*/
 
             // HTTP Get
-            if(asychTaskType.equals("Load")) {
+            if(asynchTaskType.equals("Load")) {
+                System.out.println("Asynch Task: Loading");
                 try {
                     if (getIntent().getStringExtra("url") != null) {
                         url = new URL(getIntent().getStringExtra("url"));
+                    } else if (availableIds != null) {
+                        currentIdea = availableIds[0];
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
                     } else if (getIntent().getIntArrayExtra("availableIds") != null) {
                         availableIds = getIntent().getIntArrayExtra("availableIds");
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + availableIds[0]);
+                        currentIdea = availableIds[0];
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
                     } else {
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                        /*url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                        availableIds = new int[]{10};
+                        currentIdea = 10;*/
                     }
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -150,6 +154,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
 
                     if (conn.getResponseCode() != 200) {
+                        System.out.println("Url:  " + url.toString());
                         throw new RuntimeException("Failed : HTTP error code : "
                                 + conn.getResponseCode());
                     }
@@ -167,7 +172,13 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     //jsonText= jsonText.substring(1, jsonText.length()-1);
                     System.out.println(jsonText);
                     try {
-                        JSONObject jsonObject = new JSONObject(jsonText);
+                        JSONObject jsonObject;
+                        if(jsonText.charAt(0) == '[') {
+                            JSONArray jsonArray = new JSONArray(jsonText);
+                            jsonObject = jsonArray.getJSONObject(0);
+                        } else {
+                            jsonObject = new JSONObject(jsonText);
+                        }
                         idea.setTitle(jsonObject.getString("Title"));
                         idea.setTags(jsonObject.getString("Tags"));
                         idea.setIssue(jsonObject.getString("Issue"));
@@ -196,9 +207,12 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     e.printStackTrace();
 
                 }
-            } else if (asychTaskType.equals("Next")){
+            } else if (asynchTaskType.equals("Next")){
+
+                System.out.println("Asynch Task: Next");
                 try {
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + getIntent().getIntArrayExtra("availableIds")[0]);
+                    currentIdea = availableIds[0];
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -251,6 +265,87 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     e.printStackTrace();
 
                 }
+            } else if (asynchTaskType.equals("Vote")){
+                System.out.println("Asynch Task: Voting");
+                try {
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea + "?voteUp=" + vote);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("PUT");
+                    conn.setRequestProperty("Accept", "application/json");
+
+                    if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+
+                    String output;
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        System.out.println(output);
+                    }
+
+                    conn.disconnect();
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (ProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                asynchTaskType = "Load";
+                new CallAPI().execute("value");
+            } else if(asynchTaskType.equals("Ideas")) {
+                URL url = null;
+                try {
+
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept", "application/json");
+
+
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+
+                    String output;
+                    String jsonText = "";
+                    InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        jsonText = jsonText + output;
+                    }
+                    //jsonText= jsonText.substring(1, jsonText.length()-1);
+                    System.out.println(jsonText);
+                    JSONArray jsonArray = new JSONArray(jsonText);
+                    availableIds = new int[jsonArray.length()];
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        availableIds[i] = jsonObject.getInt("Id");
+                        System.out.println(availableIds[i]);
+                    }
+                    url = null;
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (ProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                asynchTaskType = "Load";
+                new CallAPI().execute("value");
             }
 
             return null/*resultToDisplay*/;
@@ -301,7 +396,41 @@ public class DisplayMessageActivity extends ActionBarActivity {
             availableIds[availableIds.length - 1] = temp;
             System.out.println(availableIds[availableIds.length - 1]);
         }
-        asychTaskType = "Next";
+        asynchTaskType = "Next";
         new CallAPI().execute("value");
     }
+
+    public void upVote(View view) {
+        asynchTaskType = "Vote";
+        vote = true;
+        new CallAPI().execute("value");
+    }
+
+    public void downVote(View view) {
+        asynchTaskType = "Vote";
+        vote = false;
+        new CallAPI().execute("value");
+    }
+
+    public void submitClicked(View view) {
+        startActivity(new Intent(DisplayMessageActivity.this, SubmitActivity.class));
+    }
+
+    AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            System.out.println(parent.getItemAtPosition(position).toString());
+            if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
+                asynchTaskType = "Ideas";
+                new CallAPI().execute("Ideas");
+//                dropDownSpinner.setSelection(0);
+                dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+        }
+    };
 }

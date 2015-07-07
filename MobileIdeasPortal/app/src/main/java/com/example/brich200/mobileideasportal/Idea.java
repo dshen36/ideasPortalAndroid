@@ -8,8 +8,8 @@ public class Idea {
     //private final Context context;
 
     private String title, tags, issue, description, customerExperienceImpact,
-            metricsImpact, email, additionalTeamMemberEmail, lastModified;
-    private int status, intelectualPropertyStatus, id, upvotes, downvotes;
+            metricsImpact, email, additionalTeamMemberEmail, lastModified, organization;
+    private int status, intelectualPropertyStatus, id, upvotes, downvotes, views;
 
     public String getTitle(){return title;}
     public String getTags(){return tags;}
@@ -25,6 +25,8 @@ public class Idea {
     public int getUpVotes(){return upvotes;}
     public int getDownVotes(){return downvotes;}
     public String getLastModified(){return lastModified;}
+    public int getViews(){return views;}
+    public String getOrganization(){return organization;}
 
     public void setTitle(String title) {this.title = title;}
     public void setTags(String tags) {this.tags = tags;}
@@ -40,6 +42,8 @@ public class Idea {
     public void setUpvotes(int upvotes) {this.upvotes = upvotes;}
     public void setDownvotes(int downvotes) {this.downvotes = downvotes;}
     public void setLastModified(String lastModified) {this.lastModified = lastModified;}
+    public void setViews(int views) {this.views = views;}
+    public void setOrganization(String organization) {this.organization = organization;}
 
     /*public static synchronized Idea getInstance(Context context){
 
@@ -65,12 +69,14 @@ public class Idea {
         setUpvotes(-1);
         setDownvotes(-1);
         setLastModified(null);
+        setViews(0);
+        setOrganization("");
         //this.context = context;
     }
 
     public Idea(String title, String tags, String issue, String description, String customerExperienceImpact,
                 String metricsImpact, int status, int intelectualPropertyStatus, String additionalTeamMemberEmail,
-                int id, int upvotes, int downvotes, String lastModified){
+                int id, int upvotes, int downvotes, String lastModified, int views, String organization){
         setTitle(title);
         setTags(tags);
         setIssue(issue);
@@ -85,6 +91,8 @@ public class Idea {
         setUpvotes(upvotes);
         setDownvotes(downvotes);
         setLastModified(lastModified);
+        setViews(views);
+        setOrganization(organization);
         //this.context = context;
     }
 
@@ -103,6 +111,8 @@ public class Idea {
         setUpvotes(database.upvotes);
         setDownvotes(database.downvotes);
         setLastModified(database.lastModified);
+        setViews(database.getViews());
+        setOrganization(database.getOrganization());
         //this.context = context;
     }
 }
