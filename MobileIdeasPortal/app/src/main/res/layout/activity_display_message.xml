@@ -388,11 +388,14 @@
             android:layout_gravity="center_horizontal"
             android:background="@android:color/holo_orange_light"
             android:onClick="submitClicked"/>
-        <!--<SearchView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="31dp"-->
-        <!--android:background="#808080"-->
-        <!--android:id="@+id/ideaSearch"/>-->
+        <ImageButton
+            android:src="@drawable/magnifyingGlass"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:background="#a8a8a8"
+            android:layout_gravity="center_horizontal"
+            android:onClick="searchIdentifier"
+            android:id="@+id/ideaSearch"/>
 
     </GridLayout>
 
@@ -409,7 +412,6 @@
 
         <LinearLayout
             android:id="@+id/title_bar"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
