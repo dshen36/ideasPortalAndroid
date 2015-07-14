@@ -1,0 +1,216 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Cx_InnovationMainActivity"
+    android:id="@+id/layout"
+    android:background="#ffc2c2c2">
+
+    <GridLayout
+        android:rowCount="1"
+        android:columnCount="3"
+        android:id="@+id/navBar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#262626"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <GridLayout
+            android:paddingRight="20dp"
+            android:rowCount="1"
+            android:columnCount="2"
+            android:id="@+id/leftNavBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#262626"
+            android:layout_row="0"
+            android:layout_column="0">
+            <GridLayout
+                android:rowCount="2"
+                android:columnCount="1"
+                android:id="@+id/topNavBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#262626">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+                    <ImageView
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:src="@drawable/cx_innovations"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:id="@+id/cxInovationLogo"
+                        android:onClick="cxInnovationsClick"/>
+
+                    <ImageView
+                        android:paddingTop="5dp"
+                        android:src="@drawable/ideas_portal_logo"
+                        android:layout_width="55dp"
+                        android:layout_height="33dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="3dp"
+                        android:id="@+id/ideasPortalLogo"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:paddingLeft="5dp"
+                        android:layout_marginLeft="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textAlignment="center"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="Ideas: "
+                        android:id="@+id/pageTitle" />
+
+                    <TextView
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_width="142dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textAlignment="center"
+                        android:text="Submit an Idea"
+                        android:layout_marginLeft="3dp"
+                        android:id="@+id/subPages"/>
+                </LinearLayout>
+            </GridLayout>
+        </GridLayout>
+        <GridLayout
+            android:rowCount="1"
+            android:columnCount="1"
+            android:id="@+id/rightNavBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#a8a8a8"
+
+            android:layout_row="0"
+            android:layout_column="1">
+            <GridLayout
+                android:rowCount="2"
+                android:columnCount="1"
+                android:id="@+id/TRNavBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#a8a8a8">
+                <Spinner
+                    android:background="#D9FFA500"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:id="@+id/spinner"
+                    android:spinnerMode="dropdown"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:text="Submit an Idea!"
+                        android:id="@+id/SubmitIdea"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@android:color/holo_orange_light"
+                        android:onClick="createIdea"/>
+                    <ImageButton
+                        android:src="@drawable/magnifying_glass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:background="#a8a8a8"
+                        android:layout_gravity="center_horizontal"
+                        android:onClick="searchIdentifier"
+                        android:id="@+id/ideaSearch"/>
+                </LinearLayout>
+            </GridLayout>
+        </GridLayout>
+    </GridLayout>
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView5"
+        android:layout_below="@id/navBar2"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Customer Experience Innovations"
+                android:id="@+id/textView"
+                android:textColor="#ff000000"
+                android:layout_below="@+id/textView2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Welcome To"
+                android:id="@+id/textView2"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="#ff010101" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Customer Experience Engineering (cXe) acts as |Comcast&apos;s industry leader for customer experience technologies and partners with various Comcast business units to help transform customer experience. Explore the latest products in development by CX Innovations by clicking on one of the projects below or View All Projects. "
+                android:id="@+id/textView3"
+                android:layout_below="@+id/textView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="#ff000000"
+                android:paddingTop="20dp"/>
+
+            <ImageView
+                android:layout_width="400dp"
+                android:layout_height="600dp"
+                android:id="@+id/imageView"
+                android:src="@mipmap/cxinnovation"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/textView3"
+                android:paddingBottom="25dp"/>
+
+            <TextView
+                android:layout_width="500dp"
+                android:layout_height="wrap_content"
+                android:text="                  Wiki  |   Contact US   |   Admin Page"
+                android:id="@+id/textView4"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/textView"
+                android:layout_alignEnd="@+id/textView"
+                android:layout_alignParentEnd="true"
+                android:background="#ff777777"
+                android:textColor="#fffbfffd"
+                android:paddingStart="15dp"
+
+
+                />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

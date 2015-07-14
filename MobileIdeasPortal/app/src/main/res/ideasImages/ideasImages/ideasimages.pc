@@ -1,0 +1,6 @@
+Name: ideasImages
+Description: ideasImages
+Version: 0.1
+
+Requires: 
+Libs: -r:./ideasImages.dll
