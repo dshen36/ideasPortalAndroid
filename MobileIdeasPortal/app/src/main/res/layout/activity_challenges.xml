@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.brich200.mobileideasportal.SubmitActivity"
+    android:orientation="horizontal"
+    android:id="@+id/layout">
+
+    <GridLayout
+        android:rowCount="1"
+        android:columnCount="3"
+        android:id="@+id/navBar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#262626"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <GridLayout
+            android:paddingRight="20sp"
+            android:rowCount="1"
+            android:columnCount="2"
+            android:id="@+id/leftNavBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#262626"
+            android:layout_row="0"
+            android:layout_column="0">
+            <GridLayout
+                android:rowCount="2"
+                android:columnCount="1"
+                android:id="@+id/topNavBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#262626">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+                    <ImageView
+                        android:paddingTop="5sp"
+                        android:paddingLeft="5sp"
+                        android:paddingRight="10sp"
+                        android:src="@drawable/cx_innovations"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:id="@+id/cxInovationLogo"/>
+
+                    <ImageView
+                        android:paddingTop="5sp"
+                        android:src="@drawable/ideas_portal_logo"
+                        android:layout_width="55dp"
+                        android:layout_height="33dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="3dp"
+                        android:id="@+id/ideasPortalLogo" />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:paddingLeft="5sp"
+                        android:layout_marginLeft="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textAlignment="center"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="Ideas: "
+                        android:id="@+id/pageTitle" />
+
+                    <TextView
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_width="142dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textAlignment="center"
+                        android:text="Challenges"
+                        android:layout_marginLeft="3dp"
+                        android:id="@+id/subPages"/>
+                </LinearLayout>
+            </GridLayout>
+        </GridLayout>
+        <GridLayout
+            android:rowCount="1"
+            android:columnCount="1"
+            android:id="@+id/rightNavBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#a8a8a8"
+
+            android:layout_row="0"
+            android:layout_column="1">
+            <GridLayout
+                android:rowCount="2"
+                android:columnCount="1"
+                android:id="@+id/TRNavBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#a8a8a8">
+                <Spinner
+                    android:background="#D9FFA500"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:id="@+id/spinner"
+                    android:spinnerMode="dropdown"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:text="Submit an Idea!"
+                        android:id="@+id/SubmitIdea"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@android:color/holo_orange_light"
+                        android:onClick="createIdea"/>
+                    <ImageButton
+                        android:src="@drawable/magnifying_glass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:background="#a8a8a8"
+                        android:layout_gravity="center_horizontal"
+                        android:onClick="searchIdentifier"
+                        android:id="@+id/ideaSearch"/>
+                </LinearLayout>
+            </GridLayout>
+        </GridLayout>
+    </GridLayout>
+    <ScrollView
+        android:layout_below="@+id/navBar2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/scrollView"
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:textStyle="bold"
+                android:textColor="#800000"
+                android:textSize="30sp"
+                android:paddingLeft="5dp"
+                android:paddingTop="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comcast Challenges"/>
+            <LinearLayout
+                android:layout_below="@+id/navBar2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/linearLayout">
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="One Thing"/>
+                <TextView
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Improving the Customer Experience is part of every Comcaster’s responsibility. This site will be a way for you, our employees, to submit ideas and to also review and comment on ideas submitted from other employees. This never-ending challenge is centered on improving the Customer Experience. All ideas will be reviewed. Thanks for your interaction and participation."/>
+                <TextView
+                    android:textStyle="bold"
+                    android:textColor="#004080"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit an Idea"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
