@@ -125,14 +125,14 @@
                         android:layout_gravity="center_horizontal"
                         android:background="@android:color/holo_orange_light"
                         android:onClick="createIdea"/>
-                    <SearchView
-                    android:src="@drawable/magnifying_glass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="31dp"
-                    android:background="#a8a8a8"
-                    android:layout_gravity="center_horizontal"
+                        <SearchView
+                        android:src="@drawable/magnifying_glass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:background="#a8a8a8"
+                        android:layout_gravity="center_horizontal"
 
-                    android:id="@+id/ideaSearch"/>
+                        android:id="@+id/ideaSearch"/>
 
                     <!--<ImageView-->
                         <!--android:src="@drawable/magnifying_glass"-->
