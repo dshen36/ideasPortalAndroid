@@ -3,6 +3,8 @@ package com.example.brich200.mobileideasportal;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -11,17 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +34,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 
 public class DisplayMessageActivity extends ActionBarActivity {
@@ -36,6 +45,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
     TextView titleText, tagsText, issueText, descriptionText, customerExperienceImpactText, metricsText,
             statusText, intellectualPropertyStatusText, emailText, teammatesEmailText, idText, votesText,
             lastModifiedText;
+
+    ImageView image;
+    Bitmap bmp;
 
     Spinner dropDownSpinner;
     String[] subMenus = {"(Select Page)","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
@@ -86,11 +98,15 @@ public class DisplayMessageActivity extends ActionBarActivity {
         votesText = (TextView) findViewById(R.id.votes);
         lastModifiedText = (TextView) findViewById(R.id.last_modified);
 
+        image = (ImageView) findViewById(R.id.image);
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+
+        availableIds = getIntent().getIntArrayExtra("Available Ids");
 
         asynchTaskType = "Load";
         new CallAPI().execute("value");
@@ -117,6 +133,10 @@ public class DisplayMessageActivity extends ActionBarActivity {
         if(requestCode == 1 & resultCode == RESULT_OK) {
             new CallAPI().execute("value");
         }
+    }
+
+    public void cxInnovationsClick(View view) {
+        startActivity(new Intent(this, CxInnovationMain.class));
     }
 
     private class CallAPI extends AsyncTask<String, String, String> {
@@ -192,11 +212,77 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         idea.setId(jsonObject.getInt("Id"));
                         idea.setUpvotes((jsonObject.getInt("Votes")));
                         idea.setLastModified(jsonObject.getString("LastModified"));
+                        idea.setImageIds(jsonObject.getString("ImageIDs"));
+                        System.out.println(idea.getImageIds());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     conn.disconnect();
+                    System.out.println(idea.getImageIds());
+                    if(!idea.getImageIds().equals("")) {/*
+                        System.out.println("getting images");
+                        String [] nums = idea.getImageIds().split("/^[1-9][0-9]*$/");
+                        int[] numbers = new int[nums.length];
+                        for(int i = 0; i < nums.length; ++i){
+                            numbers[i] = Integer.parseInt(nums[i].trim());
+                        }*/
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/1021?imageId=16");
+/*
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/" + (availableIds != null ? availableIds[0]:idea.getId()) +"?imageId=" + numbers[0] );
+*/
+                        conn = (HttpURLConnection) url.openConnection();
+                            conn.setRequestMethod("GET");
+
+                            if (conn.getResponseCode() != 200) {
+                                System.out.println("Url:  " + url.toString());
+                                throw new RuntimeException("Failed : HTTP error code : "
+                                        + conn.getResponseCode());
+                            }
+                        InputStream in = new BufferedInputStream(url.openStream());
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        byte[] buf = new byte[1024];
+                        int n = 0;
+                        while (-1!=(n=in.read(buf))){
+                            out.write(buf, 0, n);
+                        }
+                        out.close();
+                        in.close();
+                        byte[] response = out.toByteArray();
+                        bmp = BitmapFactory.decodeByteArray(response,0,response.length);
+                        //image.setImageBitmap(bmp);
+/*
+                        br = new BufferedReader(new InputStreamReader(
+                                (conn.getInputStream())));
+
+                        String byteArrayText = "";
+                        System.out.println("Output from Server .... \n");
+                        while ((output = br.readLine()) != null) {
+                            byteArrayText = byteArrayText + output;
+                        }
+
+
+                        System.out.println(byteArrayText);
+
+                        InputStream inputStream = conn.getInputStream();
+                        byte [] imageArray = IOUtils.toByteArray(inputStream);
+                        System.out.println(imageArray.toString());
+                        imageArray = byteArrayText.getBytes();
+                        //IdeasImages ideasImages = new IdeasImages
+                        *//*ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+                        int read = 0;
+                        while ((read = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                            baos.write(buffer, 0, read);
+                        }
+                        baos.flush();
+                        byte [] imageArray = baos.toByteArray();*//*
+                        Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+                        //Bitmap bmp = BitmapFactory.decodeByteArray(imageArray, 0, imageArray.length);*/
+                        /*image = (ImageView) findViewById(R.id.image);
+                        image.setImageBitmap(bmp);*/
+                        conn.disconnect();
+                    }
 
                 } catch (MalformedURLException e) {
 
@@ -250,11 +336,59 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         idea.setId(jsonObject.getInt("Id"));
                         idea.setUpvotes((jsonObject.getInt("Votes")));
                         idea.setLastModified(jsonObject.getString("LastModified"));
+                        idea.setImageIds(jsonObject.getString("ImageIDs"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     conn.disconnect();
+                    System.out.println(idea.getImageIds());
+                    if(!idea.getImageIds().equals("null")) {
+                        System.out.println("getting images");
+                        String [] nums = idea.getImageIds().split("/^[1-9][0-9]*$/");
+                        int[] numbers = new int[nums.length];
+                        for(int i = 0; i < nums.length; ++i){
+                            numbers[i] = Integer.parseInt(nums[i].trim());
+                        }
+                        System.out.println("http://comcastideas-interns.azurewebsites.net/api/Image/" + availableIds[0] +"?imageId=" + numbers[0]);
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/" + availableIds[0] +"?imageId=" + numbers[0]);
+                        HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
+                        conn1.setRequestMethod("GET");
+                        conn1.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                        conn1.setRequestProperty("charset", "UTF-16");
+
+
+                        if (conn1.getResponseCode() != 200) {
+                            System.out.println("Url:  " + url.toString());
+                            throw new RuntimeException("Failed : HTTP error code : "
+                                    + conn.getResponseCode());
+                        }
+
+
+                        /*InputStream inputStream = conn1.getInputStream();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+                        int read = 0;
+                        while ((read = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                            baos.write(buffer, 0, read);
+                        }
+                        baos.flush();
+                        byte [] imageArray = baos.toByteArray();
+                        Bitmap bmp = BitmapFactory.decodeByteArray(imageArray, 0, imageArray.length);
+                        image.setImageBitmap(bmp);*/
+                        br = new BufferedReader(new InputStreamReader(
+                                (conn1.getInputStream())));
+
+                        String byteArrayText = "";
+                        System.out.println("Output from Server .... \n");
+                        while ((output = br.readLine()) != null) {
+                            byteArrayText = byteArrayText + output;
+                        }
+
+                        System.out.println(byteArrayText);
+
+                        conn.disconnect();
+                    }
 
                 } catch (MalformedURLException e) {
 
@@ -377,6 +511,14 @@ public class DisplayMessageActivity extends ActionBarActivity {
         lastModifiedText.setText(idea.getLastModified());
         layout.setFocusable(true);
         progressDialog.hide();
+        if(bmp != null) {
+            image = (ImageView) findViewById(R.id.image);
+            image.setImageBitmap(bmp);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            System.out.println(byteArray);
+        }
     }
 
     public void editContents(View view) {
@@ -412,7 +554,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
         new CallAPI().execute("value");
     }
 
-    public void submitClicked(View view) {
+    public void createIdea(View view) {
         startActivity(new Intent(DisplayMessageActivity.this, SubmitActivity.class));
     }
 
@@ -421,10 +563,17 @@ public class DisplayMessageActivity extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                asynchTaskType = "Ideas";
-                new CallAPI().execute("Ideas");
+                /*asynchTaskType = "Ideas";
+                new CallAPI().execute("Ideas");*/
+                startActivity(new Intent(DisplayMessageActivity.this, Directory.class));
 //                dropDownSpinner.setSelection(0);
                 dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+            } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
+                startActivity(new Intent(DisplayMessageActivity.this, Partners.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
+                startActivity(new Intent(DisplayMessageActivity.this, SuccessStoriesMain.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
+                startActivity(new Intent(DisplayMessageActivity.this, Challenges.class));
             }
         }
 

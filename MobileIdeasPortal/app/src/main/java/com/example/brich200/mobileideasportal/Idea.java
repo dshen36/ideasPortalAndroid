@@ -1,6 +1,9 @@
 package com.example.brich200.mobileideasportal;
 
 import android.content.Context;
+import android.view.View;
+
+import java.util.ArrayList;
 
 public class Idea {
 
@@ -8,8 +11,10 @@ public class Idea {
     //private final Context context;
 
     private String title, tags, issue, description, customerExperienceImpact,
-            metricsImpact, email, additionalTeamMemberEmail, lastModified, organization;
+            metricsImpact, email, additionalTeamMemberEmail, lastModified, organization, imageIds;
     private int status, intelectualPropertyStatus, id, upvotes, downvotes, views;
+    private ArrayList<byte []> arrayOfImages;
+    private View view;
 
     public String getTitle(){return title;}
     public String getTags(){return tags;}
@@ -27,6 +32,9 @@ public class Idea {
     public String getLastModified(){return lastModified;}
     public int getViews(){return views;}
     public String getOrganization(){return organization;}
+    public ArrayList<byte []> getArrayOfImages(){return arrayOfImages;}
+    public View getView(){return view;}
+    public String getImageIds(){return imageIds;}
 
     public void setTitle(String title) {this.title = title;}
     public void setTags(String tags) {this.tags = tags;}
@@ -44,6 +52,9 @@ public class Idea {
     public void setLastModified(String lastModified) {this.lastModified = lastModified;}
     public void setViews(int views) {this.views = views;}
     public void setOrganization(String organization) {this.organization = organization;}
+    public void setArrayOfImages(ArrayList<byte []> arrayOfImages){this.arrayOfImages = arrayOfImages;}
+    public void setView(View view) {this.view = view;}
+    public void setImageIds(String imageIds) {this.imageIds = imageIds;}
 
     /*public static synchronized Idea getInstance(Context context){
 
@@ -71,12 +82,15 @@ public class Idea {
         setLastModified(null);
         setViews(0);
         setOrganization("");
+        setArrayOfImages(null);
+        setView(null);
+        setImageIds("");
         //this.context = context;
     }
 
     public Idea(String title, String tags, String issue, String description, String customerExperienceImpact,
-                String metricsImpact, int status, int intelectualPropertyStatus, String additionalTeamMemberEmail,
-                int id, int upvotes, int downvotes, String lastModified, int views, String organization){
+                String metricsImpact, int status, int intelectualPropertyStatus, String email, String additionalTeamMemberEmail,
+                int id, int votes, String lastModified, int views, String organization){
         setTitle(title);
         setTags(tags);
         setIssue(issue);
@@ -88,8 +102,8 @@ public class Idea {
         setEmail(email);
         setAdditionalTeamMemberEmail(additionalTeamMemberEmail);
         setId(id);
-        setUpvotes(upvotes);
-        setDownvotes(downvotes);
+        setUpvotes(votes);
+        //setDownvotes(downvotes);
         setLastModified(lastModified);
         setViews(views);
         setOrganization(organization);
@@ -113,6 +127,9 @@ public class Idea {
         setLastModified(database.lastModified);
         setViews(database.getViews());
         setOrganization(database.getOrganization());
+        setArrayOfImages(database.getArrayOfImages());
+        setView(database.getView());
+        setImageIds(database.getImageIds());
         //this.context = context;
     }
 }

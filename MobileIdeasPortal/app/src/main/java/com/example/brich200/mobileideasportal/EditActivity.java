@@ -260,10 +260,6 @@ public class EditActivity extends ActionBarActivity {
         return metricsImpact;
     }
 
-    public void viewExistingIdeas(View view) {
-        startActivity(new Intent(EditActivity.this, DisplayMessageActivity.class));
-    }
-
     private class CallAPI extends AsyncTask<String, String, String> {
 
         @Override
@@ -300,7 +296,8 @@ public class EditActivity extends ActionBarActivity {
 
                     try {
 
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                        Intent intent = getIntent();
+                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + intent.getIntExtra("id",-1));
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setDoOutput(true);
                         conn.setRequestMethod("PUT");
@@ -342,8 +339,8 @@ public class EditActivity extends ActionBarActivity {
             } else if (asynchTaskType.equals("Load")){
                 try {
                     System.out.println("Loading Edit Activity");
-
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                    Intent intent = getIntent();
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + intent.getIntExtra("id",-1));
                     //url = new URL(url, "/" + idea.getId());
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -399,7 +396,8 @@ public class EditActivity extends ActionBarActivity {
                 }
             } else if (asynchTaskType.equals("Delete")){
                 try {
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                    Intent intent = getIntent();
+                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + intent.getIntExtra("id",-1));
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setDoOutput(true);
                     conn.setRequestMethod("DELETE");
@@ -604,7 +602,13 @@ public class EditActivity extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                viewExistingIdeas(dropDownSpinner);
+                startActivity(new Intent(EditActivity.this, Directory.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
+                startActivity(new Intent(EditActivity.this, Partners.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
+                startActivity(new Intent(EditActivity.this, SuccessStoriesMain.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
+                startActivity(new Intent(EditActivity.this, Challenges.class));
             }
         }
 
@@ -612,7 +616,12 @@ public class EditActivity extends ActionBarActivity {
         public void onNothingSelected(AdapterView<?> parent) {
             dropDownSpinner.setOnItemSelectedListener(spinnerListener);
         }
+
     };
+
+    public void cxInnovationsClick(View view) {
+        startActivity(new Intent(this, CxInnovationMain.class));
+    }
 
 
 }

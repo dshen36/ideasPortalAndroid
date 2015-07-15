@@ -7,16 +7,16 @@
     android:id="@+id/layout">
 
     <GridLayout
-    android:rowCount="1"
-    android:columnCount="3"
-    android:id="@+id/navBar2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#262626"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true">
+        android:rowCount="1"
+        android:columnCount="3"
+        android:id="@+id/navBar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#262626"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
     <GridLayout
         android:paddingRight="20sp"
         android:rowCount="1"
@@ -47,7 +47,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:id="@+id/cxInovationLogo"/>
+                    android:id="@+id/cxInovationLogo"
+                    android:onClick="cxInnovationsClick"/>
 
                 <ImageView
                     android:paddingTop="5sp"
@@ -138,8 +139,92 @@
         </GridLayout>
     </GridLayout>
 </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ideaLayout"
+        android:layout_below="@id/navBar2">
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="18sp"
+            android:paddingLeft="5dp"
+            android:paddingTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Great Minds Think"/>
+        <TextView
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:id="@+id/intro"
+            android:text="Here are some of the great ideas that have been submitted     "
+            android:gravity="right" />
+        <GridLayout
+            android:background="@android:color/holo_blue_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:rowCount="1"
+            android:columnCount="10"
+            android:paddingTop="4sp">
+            <TextView
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:layout_columnSpan="3"
+                android:layout_gravity="fill_horizontal"
+                android:paddingLeft="5sp"
+                android:paddingRight="4sp"
+                android:textSize="13sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"/>
+            <TextView
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:paddingLeft="4sp"
+                android:paddingRight="4sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="Votes"/>
+            <TextView
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:paddingLeft="4sp"
+                android:paddingRight="4sp"
+                android:layout_gravity="fill_horizontal"
+                android:layout_columnSpan="4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="Title/Description"/>
+            <TextView
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:paddingLeft="4sp"
+                android:paddingRight="4sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="Comments"/>
+            <TextView
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:paddingLeft="4sp"
+                android:paddingRight="5sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="Status"/>
+        </GridLayout>
+
+    </LinearLayout>
+
     <ScrollView
-        android:layout_below="@+id/navBar2"
+        android:layout_below="@+id/ideaLayout"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
@@ -149,90 +234,20 @@
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:textStyle="bold"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp"
-                android:paddingLeft="5dp"
-                android:paddingTop="3dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Great Minds Think"/>
-            <TextView
-                android:textStyle="italic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:id="@+id/intro"
-                android:text="Here are some of the great ideas that have been submitted     "
-                android:gravity="right" />
-            <GridLayout
-                android:background="@android:color/holo_blue_dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:rowCount="1"
-                android:columnCount="10"
-                android:paddingTop="4sp">
-                <TextView
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:layout_columnSpan="3"
-                    android:layout_gravity="fill_horizontal"
-                    android:paddingLeft="5sp"
-                    android:paddingRight="4sp"
-                    android:textSize="13sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date"/>
-                <TextView
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:paddingLeft="4sp"
-                    android:paddingRight="4sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:text="Votes"/>
-                <TextView
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:paddingLeft="4sp"
-                    android:paddingRight="4sp"
-                    android:layout_gravity="fill_horizontal"
-                    android:layout_columnSpan="4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:text="Title/Description"/>
-                <TextView
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:paddingLeft="4sp"
-                    android:paddingRight="4sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:text="Comments"/>
-                <TextView
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:paddingLeft="4sp"
-                    android:paddingRight="5sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:text="Status"/>
-            </GridLayout>
+            android:layout_height="match_parent"
+            android:id="@+id/singleIdeaLayout">
+
             <GridLayout
                 android:background="#ababab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:rowCount="1"
                 android:columnCount="10"
-                android:paddingTop="4sp">
+                android:paddingTop="4sp"
+                android:id="@+id/singleIdea"
+                android:visibility="gone">
                 <LinearLayout
                     android:layout_columnSpan="3"
                     android:orientation="vertical"
@@ -292,7 +307,8 @@
                     android:layout_columnSpan="4"
                     android:orientation="vertical"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_columnWeight="1">
                     <TextView
                         android:textColor="@android:color/holo_blue_dark"
                         android:textStyle="bold"
@@ -302,7 +318,7 @@
                         android:text="Title of Idea or Concern"
                         android:textAlignment="center"/>
                     <TextView
-                        android:layout_width="187dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Slight Description of What the Article is Going to be About. Should only show maybe 2 lines at most before encountering a 'read more...'"/>
                     <TextView
@@ -357,7 +373,6 @@
 
             </GridLayout>
         </LinearLayout>
-
     </ScrollView>
 
 

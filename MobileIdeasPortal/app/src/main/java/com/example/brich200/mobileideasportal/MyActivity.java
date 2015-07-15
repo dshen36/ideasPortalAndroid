@@ -107,7 +107,8 @@ public class MyActivity extends ActionBarActivity {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         availableIds[i] = jsonObject.getInt("Id");
                     }
-                    intent = new Intent(MyActivity.this, DisplayMessageActivity.class);
+                    intent = new Intent(MyActivity.this, Directory.class);
+                    //intent = new Intent(MyActivity.this, DisplayMessageActivity.class);
                     intent.putExtra("availableIds", availableIds);
 
 
@@ -134,7 +135,7 @@ public class MyActivity extends ActionBarActivity {
         }
     }
 
-    public void submitClicked(View view) {
+    public void createIdea(View view) {
         startActivity(new Intent(MyActivity.this, SubmitActivity.class));
     }
 

@@ -45,7 +45,8 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@android:color/holo_blue_dark"
-                        android:id="@+id/cxInovationLogo"/>
+                        android:id="@+id/cxInovationLogo"
+                        android:onClick="cxInnovationsClick"/>
 
                     <ImageView
                         android:paddingTop="5sp"
@@ -494,6 +495,11 @@
 
             <ImageView
                 android:id="@+id/imgView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"></ImageView>
+            <ImageView
+                android:id="@+id/imgView2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"></ImageView>

@@ -4,20 +4,23 @@
 
     <uses-sdk android:minSdkVersion="11" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="22" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.brich200.mobileideasportal.MyActivity"
+            android:name=".MyActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,21 +29,45 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.brich200.mobileideasportal.DisplayMessageActivity"
-            android:label="@string/title_activity_display_message"
-            android:parentActivityName="com.example.brich200.mobileideasportal.MyActivity" >
+            android:name=".DisplayMessageActivity"
+            android:label="View Ideas"
+            android:parentActivityName=".MyActivity"
+            android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.brich200.mobileideasportal.MyActivity" />
         </activity>
         <activity
-            android:name="com.example.brich200.mobileideasportal.SubmitActivity"
+            android:name=".SubmitActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
-            android:label="@string/title_activity_submit" >
+            android:label="@string/title_activity_submit"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
-        <activity android:name=".EditActivity"
+        <activity
+            android:name=".EditActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
-            android:label="EditActivity">
+            android:label="EditActivity"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name=".CxInnovationMain"
+            android:label="@string/title_activity_cx_innovation_main" >
+        </activity>
+        <activity
+            android:name=".Directory"
+            android:label="@string/title_activity_directory" >
+        </activity>
+        <activity
+            android:name=".SuccessStoriesMain"
+            android:label="@string/title_activity_success_stories_main" >
+        </activity>
+        <activity
+            android:name=".Partners"
+            android:label="@string/title_activity_partners" >
+        </activity>
+        <activity
+            android:name="com.example.brich200.mobileideasportal.Challenges"
+            android:label="@string/title_activity_challenges" >
         </activity>
     </application>
 

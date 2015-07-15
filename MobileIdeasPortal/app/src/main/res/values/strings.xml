@@ -10,6 +10,14 @@
     <string name="hello_world">Hello world!</string>
 
     <string name="action_search">Action Bar</string>
-    <string name="title_activity_submit">SubmitActivity</string>
+    <string name="title_activity_submit">Submit Activity</string>
+    <string name="title_activity_cx_inovation_main">CxInovationMain</string>
+    <string name="title_activity_cx_innovation_main">CxInnovationMain</string>
+    <string name="title_activity_directory">Directory</string>
+    <string name="title_activity_success_stories_main">SuccessStoriesMain</string>
+    <string name="title_activity_partners">Partners</string>
+    <string name="labweek"><u>Lab Week March 2015 Partners</u></string>
+    <string name="pastPartners"><u>Past Partners</u></string>
+    <string name="title_activity_challenges">Challenges</string>
 
 </resources>

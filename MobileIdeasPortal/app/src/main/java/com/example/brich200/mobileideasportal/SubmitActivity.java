@@ -1,6 +1,12 @@
 package com.example.brich200.mobileideasportal;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,6 +28,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,6 +39,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -55,6 +67,9 @@ public class SubmitActivity extends ActionBarActivity {
     private static int RESULT_LOAD_IMAGE = 1;
 
     Idea idea;
+    byte[] imageArray;
+    ArrayList<byte[]> arrayOfImages;
+    IdeaImages ideaImages;
 
     int[] availableIds;
     SearchView searchIdeas;
@@ -95,6 +110,9 @@ public class SubmitActivity extends ActionBarActivity {
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+
+        arrayOfImages = new ArrayList<byte[]>();
+        ideaImages = new IdeaImages();
 
         searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
         searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -145,6 +163,40 @@ public class SubmitActivity extends ActionBarActivity {
 
             ImageView imageView = (ImageView) findViewById(R.id.imgView);
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(bitmap.getByteCount());
+            bitmap.copyPixelsFromBuffer(byteBuffer);
+            imageArray = byteBuffer.array();
+//            Bitmap bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.RGB_565);
+            //Bitmap bitmap=BitmapFactory.decodeResource(getResources(), R.id.imgView);
+//            //Bitmap bitmap = imageView.getDrawingCache();
+//            ByteArrayOutputStream stream=new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            //imageArray = stream.toByteArray();
+           /* ImageView imageView = (ImageView) findViewById(R.id.imgView);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            Bitmap bm = imageView.getDrawingCache();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            imageArray = stream.toByteArray();*/
+            /*ImageView imageView = (ImageView) findViewById(R.id.imgView);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            Drawable drawable = imageView.getDrawable();
+            Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            imageArray = stream.toByteArray();*/
+            /*ImageView imageView2 = (ImageView) findViewById(R.id.imgView2);
+            System.out.println("Image array:  " + Arrays.toString(imageArray));
+            Bitmap bmp = BitmapFactory.decodeByteArray(imageArray, 0, imageArray.length);
+            imageView2.setImageBitmap(bmp);*/
+            //BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+            /*Bitmap bitmap = imageView.getDrawingCache();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);*/
+            //imageArray = stream.toByteArray();
+            //arrayOfImages.add(imageArray);
+            ideaImages.addImage(imageArray);
 
         }
 
@@ -187,6 +239,7 @@ public class SubmitActivity extends ActionBarActivity {
             idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
             idea.setStatus(1);
             idea.setIntelectualPropertyStatus(1);
+            //idea.set(imageArray);
 
             asynchTaskType = "Submit";
             new CallAPI().execute("Submit");
@@ -243,7 +296,6 @@ public class SubmitActivity extends ActionBarActivity {
     public void viewExistingIdeas(View view) {
         asynchTaskType = "Newest Ideas";
         new CallAPI().execute("Newest Ideas");
-        //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
 
     private class CallAPI extends AsyncTask<String, String, String> {
@@ -298,9 +350,19 @@ public class SubmitActivity extends ActionBarActivity {
                                 (conn.getInputStream())));
 
                         String output;
+                        String jsonText = "";
                         System.out.println("Output from Server .... \n");
                         while ((output = br.readLine()) != null) {
-                            System.out.println(output);
+                            jsonText = jsonText + output;
+                        }
+
+                        System.out.println(jsonText);
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(jsonText);
+                            idea.setId(jsonObject.getInt("Id"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
                         conn.disconnect();
@@ -354,7 +416,7 @@ public class SubmitActivity extends ActionBarActivity {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         availableIds[i] = jsonObject.getInt("Id");
                     }
-                    intent = new Intent(SubmitActivity.this, DisplayMessageActivity.class);
+                    intent = new Intent(SubmitActivity.this, Directory.class);
                     intent.putExtra("availableIds", availableIds);
 
 
@@ -369,6 +431,67 @@ public class SubmitActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
                 return "Searched";
+            } else if (asynchTaskType.equals("Add Images")) {
+                IdeaImages imagesToUpload = ideaImages;
+                System.out.println("Adding images to Idea#:" + idea.getId());
+                try {
+                    System.out.println("http://comcastideas-interns.azurewebsites.net/api/Image/" + idea.getId());
+                    URL url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/" + idea.getId());
+                    while (imagesToUpload.getFirst() != null) {
+                        System.out.println("Uploading an image");
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                        StringBuilder parameters = new StringBuilder();
+                        parameters.append(URLEncoder.encode(new String(ideaImages.getFirstImage()), "UTF-16"));
+
+                        conn.setDoOutput(true);
+                        conn.setRequestMethod("POST");
+                        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                        conn.setRequestProperty("charset", "UTF-16");
+                        conn.setRequestProperty("Content-Length",Integer.toString(parameters.toString().getBytes().length));
+
+                        byte[] byteArray = ideaImages.getFirstImage();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream(byteArray.length);
+                        baos.write(byteArray, 0, byteArray.length);
+                        baos.flush();
+                        baos.close();
+                        System.out.println(byteArray.toString());
+                        /*DataOutputStream wr = new DataOutputStream(conn.getOutputStream ());
+                        wr.writeBytes(parameters.toString());
+                        wr.flush();
+                        wr.close();*/
+
+                        if (conn.getResponseCode() != 200) {
+                            throw new RuntimeException("Failed : HTTP error code : "
+                                    + conn.getResponseCode());
+                        }
+
+                        BufferedReader br = new BufferedReader(new InputStreamReader(
+                                (conn.getInputStream())));
+
+                        String output;
+                        String byteArrayText = "";
+                        System.out.println("Output from Server .... \n");
+                        while ((output = br.readLine()) != null) {
+                            byteArrayText = byteArrayText + output;
+                        }
+
+                        System.out.println(byteArrayText);
+
+                        conn.disconnect();
+
+                        imagesToUpload.setFirstToNext();
+                    }
+                    System.out.println("Finished adding images");
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return "Images Added";
             }
             return null;
         }
@@ -377,14 +500,24 @@ public class SubmitActivity extends ActionBarActivity {
             System.out.println("PostExecute");
             if (result.equals("Continue")){
                 System.out.println("Continued");
-                Toast.makeText(SubmitActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
+                intent = new Intent(SubmitActivity.this, DisplayMessageActivity.class);
+                intent.putExtra("url", "http://comcastideas-interns.azurewebsites.net/api/idea/" + idea.getId());
+                if(ideaImages.getFirst() == null) {
+                    Toast.makeText(SubmitActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                } else {
+                    asynchTaskType = "Add Images";
+                    new CallAPI().execute("Add Images");
+                }
             } else if (result.equals("Fail")) {
                 System.out.println("Failed");
                 Toast.makeText(SubmitActivity.this,"Missing Fields, Please Give Your Idea A Title and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
                 return;
             } else if(result.equals("Searched")) {
                 startActivity(intent);
+            } else if(result.equals("Images Added")) {
+                Toast.makeText(SubmitActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(intent));
             } else {
                 System.out.println("Else");
             }
@@ -428,14 +561,25 @@ public class SubmitActivity extends ActionBarActivity {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
                 viewExistingIdeas(dropDownSpinner);
+            } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
+                startActivity(new Intent(SubmitActivity.this, Partners.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
+                startActivity(new Intent(SubmitActivity.this, SuccessStoriesMain.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
+                startActivity(new Intent(SubmitActivity.this, Challenges.class));
             }
         }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            dropDownSpinner.setOnItemSelectedListener(spinnerListener);
-        }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+            }
+
     };
+
+    public void cxInnovationsClick(View view) {
+        startActivity(new Intent(this, CxInnovationMain.class));
+    }
 
 
 }

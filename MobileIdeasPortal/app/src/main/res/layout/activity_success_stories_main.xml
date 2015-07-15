@@ -1,0 +1,444 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1"
+    android:background="#ffd7d9db">
+
+    <GridLayout
+        android:rowCount="1"
+        android:columnCount="3"
+        android:id="@+id/navBar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#262626"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <GridLayout
+            android:paddingRight="20sp"
+            android:rowCount="1"
+            android:columnCount="2"
+            android:id="@+id/leftNavBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#262626"
+            android:layout_row="0"
+            android:layout_column="0">
+            <GridLayout
+                android:rowCount="2"
+                android:columnCount="1"
+                android:id="@+id/topNavBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#262626">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+                    <ImageView
+                        android:paddingTop="5sp"
+                        android:paddingLeft="5sp"
+                        android:paddingRight="10sp"
+                        android:src="@drawable/cx_innovations"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:id="@+id/cxInovationLogo"
+                        android:onClick="cxInnovationsClick"/>
+
+                    <ImageView
+                        android:paddingTop="5sp"
+                        android:src="@drawable/ideas_portal_logo"
+                        android:layout_width="55dp"
+                        android:layout_height="33dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="3dp"
+                        android:id="@+id/ideasPortalLogo"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:paddingLeft="5sp"
+                        android:layout_marginLeft="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textAlignment="center"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="Ideas: "
+                        android:id="@+id/pageTitle" />
+
+                    <TextView
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_width="142dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textAlignment="center"
+                        android:text="Submit an Idea"
+                        android:layout_marginLeft="3dp"
+                        android:id="@+id/subPages"/>
+                </LinearLayout>
+            </GridLayout>
+        </GridLayout>
+        <GridLayout
+            android:rowCount="1"
+            android:columnCount="1"
+            android:id="@+id/rightNavBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#a8a8a8"
+
+            android:layout_row="0"
+            android:layout_column="1">
+            <GridLayout
+                android:rowCount="2"
+                android:columnCount="1"
+                android:id="@+id/TRNavBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#a8a8a8">
+                <Spinner
+                    android:background="#D9FFA500"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:id="@+id/spinner"
+                    android:spinnerMode="dropdown"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:text="Submit an Idea!"
+                        android:id="@+id/SubmitIdea"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@android:color/holo_orange_light"
+                        android:onClick="createIdea"/>
+                    <SearchView
+                        android:src="@drawable/magnifying_glass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:background="#a8a8a8"
+                        android:layout_gravity="center_horizontal"
+
+                        android:id="@+id/ideaSearch"/>
+
+                    <!--<ImageView-->
+                    <!--android:src="@drawable/magnifying_glass"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="31dp"-->
+                    <!--android:background="#a8a8a8"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:onClick="searchIdentifier"-->
+                    <!--android:id="@+id/ideaSearch"/>-->
+                </LinearLayout>
+            </GridLayout>
+        </GridLayout>
+    </GridLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView3"
+        android:layout_below="@id/navBar2">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView android:id="@+id/edit_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Fitness app for X1"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Childproofing Option for Remote"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/edit_message"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Binge Watching!"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="RexProxy"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="PawPaw Patch"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView3"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Firefly Reloaded"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView4"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Reinvent Nielsen Ratings for Xfinity Experience"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView5"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="CSS Lint for Sass &amp; Compass"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView6"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Anubis"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView7"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Cross-Platform Real-Time Monitoring of Video Streams"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView8"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="TCP Hazel"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView9"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView android:id="@+id/edit_message2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Federated Search"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@id/TextView10"/>
+
+            <TextView
+                android:id="@+id/TextView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Client-Side Caching for commons-httpclient"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/edit_message2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Mobile XFINITY"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView11"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="RESTful rDVR API"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView12"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Xfinity Sports 2"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView13"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="XFINITY TV in Node.js"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView14"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Sirius-Node"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView15"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="MyDVR/Remote Tune self help and healing"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView16"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Nozomi"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView17"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView19"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Universal Media Discovery"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView18"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+
+            <TextView android:id="@+id/edit_message3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Panda Science - Better Sprite Animation"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@id/TextView19"/>
+
+            <TextView
+                android:id="@+id/TextView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Xfinity Magic Remote - Auto Select the active TV for remote tunes"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/edit_message3"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/TextView21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:text="Google-like Search For Xfinity TV.com"
+                android:textColor="#ff2a14aa"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/TextView20"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>
