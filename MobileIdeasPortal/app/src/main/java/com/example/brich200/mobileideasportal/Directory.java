@@ -322,6 +322,35 @@ public class Directory extends ActionBarActivity {
         new CallAPI().execute("Vote");
     }
 
+    public void openIdea(View view) {
+        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        View parentView = view;
+        while (!parentView.getParent().equals(control)) {
+            parentView = (View) parentView.getParent();
+            System.out.println("Going up");
+        }
+        System.out.println("Found");
+        TextView id = (TextView) parentView.findViewById(R.id.idea_id);
+        id.getText();
+        String numberString = id.getText().toString();
+
+        currentIdea = Integer.parseInt(numberString);
+        if (availableIds != null){
+            while (availableIds[0] != currentIdea) {
+                int temp = availableIds[0];
+                for(int i = 0; i < availableIds.length - 1; i++) {
+                    availableIds[i] = availableIds[i + 1];
+                    System.out.println(availableIds[i]);
+                }
+                availableIds[availableIds.length - 1] = temp;
+                System.out.println(availableIds[availableIds.length - 1]);
+            }
+        }
+        Intent intent = new Intent(Directory.this, DisplayMessageActivity.class);
+        intent.putExtra("Available Ids", availableIds);
+        startActivity(intent);
+    }
+
     public static String getDay(String timestamp)
     {
         String day = "";

@@ -106,6 +106,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
 
+        availableIds = getIntent().getIntArrayExtra("Available Ids");
+
         asynchTaskType = "Load";
         new CallAPI().execute("value");
     }

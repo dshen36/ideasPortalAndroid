@@ -88,7 +88,8 @@
             android:orientation="vertical"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_columnWeight="1">
+            android:layout_columnWeight="1"
+            android:onClick="openIdea">
             <TextView
                 android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold"
@@ -113,11 +114,11 @@
                 android:id="@+id/tags"/>
         </LinearLayout>
         <LinearLayout
-
             android:orientation="vertical"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_columnSpan="1">
+            android:layout_columnSpan="1"
+            android:onClick="openIdea">
             <TextView
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
@@ -143,7 +144,8 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_height="match_parent"
-            android:layout_width="wrap_content">
+            android:layout_width="wrap_content"
+            android:onClick="openIdea">
             <ImageView
                 android:src="@drawable/star"
                 android:paddingRight="15sp"
