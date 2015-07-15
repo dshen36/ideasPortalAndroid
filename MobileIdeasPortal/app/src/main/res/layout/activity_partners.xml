@@ -61,6 +61,7 @@
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="3dp"
                         android:id="@+id/ideasPortalLogo"
+                        android:onClick="startWelcome"
                         />
                 </LinearLayout>
                 <LinearLayout

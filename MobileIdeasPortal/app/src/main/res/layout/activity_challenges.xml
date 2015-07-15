@@ -58,7 +58,8 @@
                         android:textColor="@android:color/holo_blue_dark"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="3dp"
-                        android:id="@+id/ideasPortalLogo" />
+                        android:id="@+id/ideasPortalLogo"
+                        android:onClick="startWelcome"/>
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="horizontal"

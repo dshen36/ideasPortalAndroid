@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -56,6 +57,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     int status, intellectualPropertyStatus, id, votes;
 
+    Button editContents;
+    LinearLayout buttons;
+
     int currentIdea;
 
     Idea idea;
@@ -72,6 +76,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     boolean vote;
 
+    CredentialHolder credentialHolder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +87,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
         layout.setFocusable(true);
         idea = new Idea();
 
-
-
+        credentialHolder = CredentialHolder.getInstance(this);
 
         titleText = (TextView) findViewById(R.id.title);
         tagsText = (TextView) findViewById(R.id.tags);
@@ -99,12 +104,16 @@ public class DisplayMessageActivity extends ActionBarActivity {
         lastModifiedText = (TextView) findViewById(R.id.last_modified);
 
         image = (ImageView) findViewById(R.id.image);
+        editContents = (Button) findViewById(R.id.edit_contents);
+        buttons = (LinearLayout) findViewById(R.id.buttons);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+
+        availableIds = getIntent().getIntArrayExtra("Available Ids");
 
         asynchTaskType = "Load";
         new CallAPI().execute("value");
@@ -517,6 +526,15 @@ public class DisplayMessageActivity extends ActionBarActivity {
             byte[] byteArray = stream.toByteArray();
             System.out.println(byteArray);
         }
+        if(!credentialHolder.getUserEmail().equals(idea.getEmail())) {
+            if(editContents.getParent().equals(buttons)) {
+                buttons.removeView(editContents);
+            }
+        } else {
+            if(!editContents.getParent().equals(buttons)) {
+                buttons.addView(editContents,0);
+            }
+        }
     }
 
     public void editContents(View view) {
@@ -561,8 +579,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                asynchTaskType = "Ideas";
-                new CallAPI().execute("Ideas");
+                /*asynchTaskType = "Ideas";
+                new CallAPI().execute("Ideas");*/
+                startActivity(new Intent(DisplayMessageActivity.this, Directory.class));
 //                dropDownSpinner.setSelection(0);
                 dropDownSpinner.setOnItemSelectedListener(spinnerListener);
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
@@ -571,6 +590,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
                 startActivity(new Intent(DisplayMessageActivity.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
                 startActivity(new Intent(DisplayMessageActivity.this, Challenges.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
+                startActivity(new Intent(DisplayMessageActivity.this, LabWeekDirectory.class));
             }
         }
 
@@ -579,4 +600,6 @@ public class DisplayMessageActivity extends ActionBarActivity {
             dropDownSpinner.setOnItemSelectedListener(spinnerListener);
         }
     };
+
+    public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}
 }

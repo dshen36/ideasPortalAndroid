@@ -144,4 +144,8 @@ public class MyActivity extends ActionBarActivity {
         new CallAPI().execute("Ideas");
         //startActivity(new Intent(MyActivity.this, DisplayMessageActivity.class));
     }
+    public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}
+
+
+    public void startLabWeek(View view) {startActivity(new Intent(this, LabWeekDirectory.class));}
 }

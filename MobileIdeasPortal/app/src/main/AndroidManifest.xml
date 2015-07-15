@@ -22,11 +22,6 @@
         <activity
             android:name=".MyActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".DisplayMessageActivity"
@@ -66,8 +61,22 @@
             android:label="@string/title_activity_partners" >
         </activity>
         <activity
-            android:name="com.example.brich200.myfirstapp.Challenges"
+            android:name=".Challenges"
             android:label="@string/title_activity_challenges" >
+        </activity>
+        <activity
+            android:name=".Login"
+            android:label="@string/title_activity_login">
+
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+        <activity
+            android:name=".LabWeekDirectory"
+            android:label="@string/title_activity_lab_week_directory" >
         </activity>
     </application>
 

@@ -32,7 +32,8 @@
             android:textColor="@android:color/white"
             android:background="@android:color/darker_gray"
             android:padding="2dp"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:onClick="startLabWeek"/>
 
         <LinearLayout
             android:orientation="horizontal"

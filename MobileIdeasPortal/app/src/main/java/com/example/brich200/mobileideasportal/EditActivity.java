@@ -65,6 +65,8 @@ public class EditActivity extends ActionBarActivity {
 
     Button delete, cancel;
 
+
+
     private String baseUrl = "http://comcastideas-interns.azurewebsites.net/api";
 
     @Override
@@ -602,13 +604,15 @@ public class EditActivity extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(EditActivity.this, DisplayMessageActivity.class));
+                startActivity(new Intent(EditActivity.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
                 startActivity(new Intent(EditActivity.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
                 startActivity(new Intent(EditActivity.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
                 startActivity(new Intent(EditActivity.this, Challenges.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
+                startActivity(new Intent(EditActivity.this, LabWeekDirectory.class));
             }
         }
 
@@ -622,6 +626,8 @@ public class EditActivity extends ActionBarActivity {
     public void cxInnovationsClick(View view) {
         startActivity(new Intent(this, CxInnovationMain.class));
     }
+
+    public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}
 
 
 }

@@ -51,7 +51,7 @@ public class Directory extends ActionBarActivity {
         setContentView(R.layout.activity_directory);
 
         singleIdea = (GridLayout) findViewById(R.id.singleIdea);
-        ideaLayout = (LinearLayout) findViewById(R.id.ideaLayout);
+        ideaLayout = (LinearLayout) findViewById(R.id.singleIdeaLayout);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
@@ -91,13 +91,15 @@ public class Directory extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(Directory.this, DisplayMessageActivity.class));
+                startActivity(new Intent(Directory.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
                 startActivity(new Intent(Directory.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
                 startActivity(new Intent(Directory.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
                 startActivity(new Intent(Directory.this, Challenges.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
+                startActivity(new Intent(Directory.this, LabWeekDirectory.class));
             }
         }
 
@@ -254,7 +256,7 @@ public class Directory extends ActionBarActivity {
 
     private void inflateIdeas() {
 
-        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
         control.removeAllViews();
         for(int i = 0; i < inflatedIdeas.length; ++i) {
             LayoutInflater l = getLayoutInflater();
@@ -285,7 +287,7 @@ public class Directory extends ActionBarActivity {
     public void upVote(View view) {
         System.out.println("Up Clicked");
         canVote = false;
-        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
         View parentView = view;
         while (!parentView.getParent().equals(control)) {
             parentView = (View) parentView.getParent();
@@ -305,7 +307,7 @@ public class Directory extends ActionBarActivity {
     public void downVote(View view) {
         System.out.println("Up Clicked");
         canVote = false;
-        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
         View parentView = view;
         while (!parentView.getParent().equals(control)) {
             parentView = (View) parentView.getParent();
@@ -320,6 +322,35 @@ public class Directory extends ActionBarActivity {
         vote = false;
         asynchTaskType = "Vote";
         new CallAPI().execute("Vote");
+    }
+
+    public void openIdea(View view) {
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
+        View parentView = view;
+        while (!parentView.getParent().equals(control)) {
+            parentView = (View) parentView.getParent();
+            System.out.println("Going up");
+        }
+        System.out.println("Found");
+        TextView id = (TextView) parentView.findViewById(R.id.idea_id);
+        id.getText();
+        String numberString = id.getText().toString();
+
+        currentIdea = Integer.parseInt(numberString);
+        if (availableIds != null){
+            while (availableIds[0] != currentIdea) {
+                int temp = availableIds[0];
+                for(int i = 0; i < availableIds.length - 1; i++) {
+                    availableIds[i] = availableIds[i + 1];
+                    System.out.println(availableIds[i]);
+                }
+                availableIds[availableIds.length - 1] = temp;
+                System.out.println(availableIds[availableIds.length - 1]);
+            }
+        }
+        Intent intent = new Intent(Directory.this, DisplayMessageActivity.class);
+        intent.putExtra("Available Ids", availableIds);
+        startActivity(intent);
     }
 
     public static String getDay(String timestamp)
@@ -342,4 +373,6 @@ public class Directory extends ActionBarActivity {
         year = timestamp.substring(0,4);
         return year;
     }
+
+    public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}
 }

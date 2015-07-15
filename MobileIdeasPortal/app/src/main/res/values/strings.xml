@@ -19,5 +19,7 @@
     <string name="labweek"><u>Lab Week March 2015 Partners</u></string>
     <string name="pastPartners"><u>Past Partners</u></string>
     <string name="title_activity_challenges">Challenges</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_lab_week_directory">LabWeekDirectory</string>
 
 </resources>

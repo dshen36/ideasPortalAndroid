@@ -71,13 +71,15 @@ public class Challenges extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(Challenges.this, DisplayMessageActivity.class));
+                startActivity(new Intent(Challenges.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
                 startActivity(new Intent(Challenges.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
                 startActivity(new Intent(Challenges.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
                 startActivity(new Intent(Challenges.this, Challenges.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
+                startActivity(new Intent(Challenges.this, LabWeekDirectory.class));
             }
         }
 
@@ -95,4 +97,6 @@ public class Challenges extends ActionBarActivity {
     public void createIdea(View view) {
         startActivity(new Intent(this, SubmitActivity.class));
     }
+
+    public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}
 }

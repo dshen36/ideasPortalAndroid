@@ -416,7 +416,7 @@ public class SubmitActivity extends ActionBarActivity {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         availableIds[i] = jsonObject.getInt("Id");
                     }
-                    intent = new Intent(SubmitActivity.this, DisplayMessageActivity.class);
+                    intent = new Intent(SubmitActivity.this, Directory.class);
                     intent.putExtra("availableIds", availableIds);
 
 
@@ -567,6 +567,8 @@ public class SubmitActivity extends ActionBarActivity {
                 startActivity(new Intent(SubmitActivity.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
                 startActivity(new Intent(SubmitActivity.this, Challenges.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
+                startActivity(new Intent(SubmitActivity.this, LabWeekDirectory.class));
             }
         }
 
@@ -580,6 +582,8 @@ public class SubmitActivity extends ActionBarActivity {
     public void cxInnovationsClick(View view) {
         startActivity(new Intent(this, CxInnovationMain.class));
     }
+
+    public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}
 
 
 }

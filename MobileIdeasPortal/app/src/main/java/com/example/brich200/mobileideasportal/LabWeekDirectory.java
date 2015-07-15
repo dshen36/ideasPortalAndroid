@@ -2,7 +2,6 @@ package com.example.brich200.mobileideasportal;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.provider.Telephony;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,7 +25,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class Partners extends ActionBarActivity {
+public class LabWeekDirectory extends ActionBarActivity {
 
     String asynchTaskType;
     int[] availableIds;
@@ -35,7 +34,7 @@ public class Partners extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_partners);
+        setContentView(R.layout.activity_lab_week_directory);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
@@ -47,7 +46,7 @@ public class Partners extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_partners, menu);
+        getMenuInflater().inflate(R.menu.menu_lab_week_directory, menu);
         return true;
     }
 
@@ -71,15 +70,15 @@ public class Partners extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(Partners.this, Directory.class));
+                startActivity(new Intent(LabWeekDirectory.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
-                startActivity(new Intent(Partners.this, Partners.class));
+                startActivity(new Intent(LabWeekDirectory.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
-                startActivity(new Intent(Partners.this, SuccessStoriesMain.class));
-            } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
-                startActivity(new Intent(Partners.this, Challenges.class));
+                startActivity(new Intent(LabWeekDirectory.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
-                startActivity(new Intent(Partners.this, LabWeekDirectory.class));
+                startActivity(new Intent(LabWeekDirectory.this, LabWeekDirectory.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
+                startActivity(new Intent(LabWeekDirectory.this, Challenges.class));
             }
         }
 
@@ -90,12 +89,12 @@ public class Partners extends ActionBarActivity {
 
     };
 
-    public void cxInnovationsClick(View view) {
-        startActivity(new Intent(this, CxInnovationMain.class));
-    }
-
     public void createIdea(View view) {
         startActivity(new Intent(this, SubmitActivity.class));
+    }
+
+    public void cxInnovationsClick(View view) {
+        startActivity(new Intent(this, CxInnovationMain.class));
     }
 
     public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}

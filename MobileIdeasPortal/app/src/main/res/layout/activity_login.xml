@@ -5,7 +5,7 @@
     android:background="#262626">
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="0"
+        android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:layout_marginLeft="13sp"
         android:layout_marginRight="13sp"></RelativeLayout>
@@ -14,7 +14,7 @@
 
         android:background="#FFFFFF"
         android:layout_width="wrap_content"
-        android:layout_height="0"
+        android:layout_height="wrap_content"
         android:layout_weight="4"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="Username"
+            android:text="Comcast Email"
             android:textStyle="bold"
             android:id="@+id/usernameLabel"/>
         <EditText
@@ -46,16 +46,17 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:padding="3dp"
             android:layout_below="@+id/usernameLabel"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:background="@drawable/url_bar"
-            android:id="@+id/edit_logIn"
+            android:id="@+id/edit_email"
             android:inputType="text"
-            android:hint="Username"
+            android:hint="name@cable.comcast.com"
             android:backgroundTint="#999" />
         <TextView
-            android:layout_below="@+id/edit_logIn"
+            android:layout_below="@+id/edit_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -68,14 +69,15 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:padding="3dp"
             android:layout_below="@+id/passwordLabel"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:background="@drawable/url_bar"
             android:id="@+id/edit_password"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:hint="Password"
-            android:backgroundTint="#999"  />
+            android:backgroundTint="#999" />
         <LinearLayout
             android:paddingTop="45dp"
             android:paddingLeft="10dp"
@@ -116,6 +118,6 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0"
+        android:layout_height="wrap_content"
         android:layout_weight="0.35"></RelativeLayout>
 </LinearLayout>

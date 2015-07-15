@@ -70,13 +70,15 @@ public class SuccessStoriesMain extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(SuccessStoriesMain.this, DisplayMessageActivity.class));
+                startActivity(new Intent(SuccessStoriesMain.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
                 startActivity(new Intent(SuccessStoriesMain.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
                 startActivity(new Intent(SuccessStoriesMain.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
                 startActivity(new Intent(SuccessStoriesMain.this, Challenges.class));
+            } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
+                startActivity(new Intent(SuccessStoriesMain.this, LabWeekDirectory.class));
             }
         }
 
@@ -94,4 +96,6 @@ public class SuccessStoriesMain extends ActionBarActivity {
     public void createIdea(View view) {
         startActivity(new Intent(this, SubmitActivity.class));
     }
+
+    public void startWelcome(View view) {startActivity(new Intent(this, MyActivity.class));}
 }

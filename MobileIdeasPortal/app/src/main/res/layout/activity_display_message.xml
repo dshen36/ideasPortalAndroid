@@ -59,6 +59,7 @@
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="3dp"
                         android:id="@+id/ideasPortalLogo"
+                        android:onClick="startWelcome"
                         />
                 </LinearLayout>
                 <LinearLayout
@@ -444,7 +445,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/buttons">
 
                 <Button
                     android:layout_marginTop="7.5dp"
