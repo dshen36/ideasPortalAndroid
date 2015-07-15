@@ -416,7 +416,7 @@ public class SubmitActivity extends ActionBarActivity {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         availableIds[i] = jsonObject.getInt("Id");
                     }
-                    intent = new Intent(SubmitActivity.this, DisplayMessageActivity.class);
+                    intent = new Intent(SubmitActivity.this, Directory.class);
                     intent.putExtra("availableIds", availableIds);
 
 

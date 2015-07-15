@@ -51,7 +51,7 @@ public class Directory extends ActionBarActivity {
         setContentView(R.layout.activity_directory);
 
         singleIdea = (GridLayout) findViewById(R.id.singleIdea);
-        ideaLayout = (LinearLayout) findViewById(R.id.ideaLayout);
+        ideaLayout = (LinearLayout) findViewById(R.id.singleIdeaLayout);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
@@ -91,7 +91,7 @@ public class Directory extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(Directory.this, DisplayMessageActivity.class));
+                startActivity(new Intent(Directory.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
                 startActivity(new Intent(Directory.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
@@ -254,7 +254,7 @@ public class Directory extends ActionBarActivity {
 
     private void inflateIdeas() {
 
-        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
         control.removeAllViews();
         for(int i = 0; i < inflatedIdeas.length; ++i) {
             LayoutInflater l = getLayoutInflater();
@@ -285,7 +285,7 @@ public class Directory extends ActionBarActivity {
     public void upVote(View view) {
         System.out.println("Up Clicked");
         canVote = false;
-        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
         View parentView = view;
         while (!parentView.getParent().equals(control)) {
             parentView = (View) parentView.getParent();
@@ -305,7 +305,7 @@ public class Directory extends ActionBarActivity {
     public void downVote(View view) {
         System.out.println("Up Clicked");
         canVote = false;
-        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
         View parentView = view;
         while (!parentView.getParent().equals(control)) {
             parentView = (View) parentView.getParent();
@@ -323,7 +323,7 @@ public class Directory extends ActionBarActivity {
     }
 
     public void openIdea(View view) {
-        LinearLayout control = (LinearLayout) findViewById(R.id.ideaLayout);
+        LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
         View parentView = view;
         while (!parentView.getParent().equals(control)) {
             parentView = (View) parentView.getParent();

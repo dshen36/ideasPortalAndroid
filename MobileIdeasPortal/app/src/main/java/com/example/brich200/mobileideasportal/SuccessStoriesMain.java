@@ -70,7 +70,7 @@ public class SuccessStoriesMain extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(SuccessStoriesMain.this, DisplayMessageActivity.class));
+                startActivity(new Intent(SuccessStoriesMain.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
                 startActivity(new Intent(SuccessStoriesMain.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {

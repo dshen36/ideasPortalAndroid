@@ -563,8 +563,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                asynchTaskType = "Ideas";
-                new CallAPI().execute("Ideas");
+                /*asynchTaskType = "Ideas";
+                new CallAPI().execute("Ideas");*/
+                startActivity(new Intent(DisplayMessageActivity.this, Directory.class));
 //                dropDownSpinner.setSelection(0);
                 dropDownSpinner.setOnItemSelectedListener(spinnerListener);
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
