@@ -36,7 +36,7 @@ public class Directory extends ActionBarActivity {
     String asynchTaskType;
     int[] availableIds;
     Spinner dropDownSpinner;
-    String[] subMenus = {"(Select Page)","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String[] subMenus = {"Menu","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
     GridLayout singleIdea;
     LinearLayout ideaLayout;
     Idea idea;

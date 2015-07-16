@@ -57,7 +57,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
     boolean showImage = true, firstTime = true;
 
     Spinner dropDownSpinner;
-    String[] subMenus = {"(Select Page)","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String[] subMenus = {"Menu","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
 
     String title, tags, issue, description, customerExperienceImpact, metrics, email, teammatesEmail, lastModified;
 

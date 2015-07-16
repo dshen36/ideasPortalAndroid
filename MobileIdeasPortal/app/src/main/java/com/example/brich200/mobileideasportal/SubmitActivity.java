@@ -62,7 +62,7 @@ public class SubmitActivity extends ActionBarActivity {
     CheckBox self_service, call_deflection, agent_contact, call_resolution, rework, avoidable_truck, upstream_downstream, cost_savings, other;
 
     Spinner dropDownSpinner;
-    String[] subMenus = {"(Select Page)","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String[] subMenus = {"Menu","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
 
     private static int RESULT_LOAD_IMAGE = 1;
 
