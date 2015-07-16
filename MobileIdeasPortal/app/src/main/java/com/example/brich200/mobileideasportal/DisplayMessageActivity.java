@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -49,6 +50,11 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
     ImageView image;
     Bitmap bmp;
+    ScrollView scrollView;
+
+    LinearLayout ideaHolder;
+
+    boolean showImage = true, firstTime = true;
 
     Spinner dropDownSpinner;
     String[] subMenus = {"(Select Page)","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
@@ -102,6 +108,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
         idText = (TextView) findViewById(R.id.id);
         votesText = (TextView) findViewById(R.id.votes);
         lastModifiedText = (TextView) findViewById(R.id.last_modified);
+
+        scrollView = (ScrollView) findViewById(R.id.scrollView2);
+        ideaHolder = (LinearLayout) findViewById(R.id.ideaHolder);
 
         image = (ImageView) findViewById(R.id.image);
         editContents = (Button) findViewById(R.id.edit_contents);
@@ -164,14 +173,14 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         url = new URL(getIntent().getStringExtra("url"));
                     } else if (availableIds != null) {
                         currentIdea = availableIds[0];
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + currentIdea);
                     } else if (getIntent().getIntArrayExtra("availableIds") != null) {
                         availableIds = getIntent().getIntArrayExtra("availableIds");
                         currentIdea = availableIds[0];
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + currentIdea);
                     } else {
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
-                        /*url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/10");
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
+                        /*url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/10");
                         availableIds = new int[]{10};
                         currentIdea = 10;*/
                     }
@@ -227,16 +236,16 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
                     conn.disconnect();
                     System.out.println(idea.getImageIds());
-                    if(!idea.getImageIds().equals("")) {/*
+                    if(!idea.getImageIds().equals("null") || showImage) {/*
                         System.out.println("getting images");
                         String [] nums = idea.getImageIds().split("/^[1-9][0-9]*$/");
                         int[] numbers = new int[nums.length];
                         for(int i = 0; i < nums.length; ++i){
                             numbers[i] = Integer.parseInt(nums[i].trim());
                         }*/
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/1021?imageId=16");
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/Image/1021?imageId=16");
 /*
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/" + (availableIds != null ? availableIds[0]:idea.getId()) +"?imageId=" + numbers[0] );
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + (availableIds != null ? availableIds[0]:idea.getId()) +"?imageId=" + numbers[0] );
 */
                         conn = (HttpURLConnection) url.openConnection();
                             conn.setRequestMethod("GET");
@@ -305,7 +314,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                 System.out.println("Asynch Task: Next");
                 try {
                     currentIdea = availableIds[0];
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea);
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + currentIdea);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -350,15 +359,16 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
                     conn.disconnect();
                     System.out.println(idea.getImageIds());
-                    if(!idea.getImageIds().equals("null")) {
+                    if(!idea.getImageIds().equals("null") && firstTime) {
+                        showImage = true;
                         System.out.println("getting images");
                         String [] nums = idea.getImageIds().split("/^[1-9][0-9]*$/");
                         int[] numbers = new int[nums.length];
                         for(int i = 0; i < nums.length; ++i){
                             numbers[i] = Integer.parseInt(nums[i].trim());
                         }
-                        System.out.println("http://comcastideas-interns.azurewebsites.net/api/Image/" + availableIds[0] +"?imageId=" + numbers[0]);
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/" + availableIds[0] +"?imageId=" + numbers[0]);
+                        System.out.println("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + availableIds[0] +"?imageId=" + numbers[0]);
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + availableIds[0] +"?imageId=" + numbers[0]);
                         HttpURLConnection conn1 = (HttpURLConnection) url.openConnection();
                         conn1.setRequestMethod("GET");
                         conn1.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -395,6 +405,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         System.out.println(byteArrayText);
 
                         conn.disconnect();
+                    } else if(!idea.getImageIds().equals("null")) {
+                        showImage = true;
                     }
 
                 } catch (MalformedURLException e) {
@@ -409,7 +421,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
             } else if (asynchTaskType.equals("Vote")){
                 System.out.println("Asynch Task: Voting");
                 try {
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea + "?voteUp=" + vote);
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + currentIdea + "?voteUp=" + vote);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("PUT");
                     conn.setRequestProperty("Accept", "application/json");
@@ -443,7 +455,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                 URL url = null;
                 try {
 
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -494,6 +506,9 @@ public class DisplayMessageActivity extends ActionBarActivity {
 
         protected void onPostExecute(String result) {
             System.out.println("PostExecute");
+            if(asynchTaskType.equals("Next")) {
+                scrollView.scrollTo(0,0);
+            }
             updateUI();
 
         }
@@ -518,23 +533,31 @@ public class DisplayMessageActivity extends ActionBarActivity {
         lastModifiedText.setText(idea.getLastModified());
         layout.setFocusable(true);
         progressDialog.hide();
-        if(bmp != null) {
+        if(bmp != null && firstTime) {
             image = (ImageView) findViewById(R.id.image);
             image.setImageBitmap(bmp);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
             System.out.println(byteArray);
+            firstTime = false;
+            ideaHolder.removeView(image);
+        }
+        if (showImage && image.getParent() == null) {
+            ideaHolder.addView(image, 1);
+        }else {
+            ideaHolder.removeView(image);
         }
         if(!credentialHolder.getUserEmail().equals(idea.getEmail())) {
             if(editContents.getParent().equals(buttons)) {
                 buttons.removeView(editContents);
             }
         } else {
-            if(!editContents.getParent().equals(buttons)) {
+            if(editContents.getParent()==null) {
                 buttons.addView(editContents,0);
             }
         }
+        showImage = false;
     }
 
     public void editContents(View view) {
@@ -554,6 +577,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
             availableIds[availableIds.length - 1] = temp;
             System.out.println(availableIds[availableIds.length - 1]);
         }
+        progressDialog = ProgressDialog.show(this, "Loading Next Idea", "Please Wait");
         asynchTaskType = "Next";
         new CallAPI().execute("value");
     }

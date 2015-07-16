@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class Login extends ActionBarActivity {
@@ -44,7 +45,17 @@ public class Login extends ActionBarActivity {
     public void LogIn(View view) {
         EditText email = (EditText) findViewById(R.id.edit_email);
         EditText password = (EditText) findViewById(R.id.edit_password);
-        credentialHolder.setUserEmail(email.getText().toString());
-        startActivity(new Intent(this, MyActivity.class));
+        if(!email.getText().toString().equals("") && testEmail(email.getText().toString())) {
+            credentialHolder.setUserEmail(email.getText().toString());
+            startActivity(new Intent(this, MyActivity.class));
+        } else if (!testEmail(email.getText().toString())) {
+            Toast.makeText(this,"Please Enter a Comcast Email",Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this,"Please Enter an Email",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static boolean testEmail(String email){
+        return email.matches("[a-zA-Z]+(((\\-)|[._a-zA-Z0-9])*)@cable.comcast.com")||email.matches("");
     }
 }

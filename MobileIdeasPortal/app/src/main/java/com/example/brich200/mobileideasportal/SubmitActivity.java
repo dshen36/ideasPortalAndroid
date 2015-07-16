@@ -76,7 +76,7 @@ public class SubmitActivity extends ActionBarActivity {
     String asynchTaskType, urlString;
     Intent intent;
 
-    private String baseUrl = "http://comcastideas-interns.azurewebsites.net/api";
+    private String baseUrl = "http://rossette9-001-site1.mywindowshosting.com/api";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +119,7 @@ public class SubmitActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 asynchTaskType = "Search";
-                urlString = "http://comcastideas-interns.azurewebsites.net/api/idea?searchQuery=" + query + "&searchParamater=Title";
+                urlString = "http://rossette9-001-site1.mywindowshosting.com/api/idea?searchQuery=" + query + "&searchParamater=Title";
                 System.out.println(urlString);
                 new CallAPI().execute("value");
                 return false;
@@ -331,7 +331,7 @@ public class SubmitActivity extends ActionBarActivity {
 
                     try {
 
-                        URL url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                        URL url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setDoOutput(true);
                         conn.setRequestMethod("POST");
@@ -386,7 +386,7 @@ public class SubmitActivity extends ActionBarActivity {
                     if (asynchTaskType.equals("Search")) {
                         url = new URL(urlString);
                     } else if (asynchTaskType.equals("Newest Ideas")) {
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
                     }
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -435,8 +435,8 @@ public class SubmitActivity extends ActionBarActivity {
                 IdeaImages imagesToUpload = ideaImages;
                 System.out.println("Adding images to Idea#:" + idea.getId());
                 try {
-                    System.out.println("http://comcastideas-interns.azurewebsites.net/api/Image/" + idea.getId());
-                    URL url = new URL("http://comcastideas-interns.azurewebsites.net/api/Image/" + idea.getId());
+                    System.out.println("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + idea.getId());
+                    URL url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + idea.getId());
                     while (imagesToUpload.getFirst() != null) {
                         System.out.println("Uploading an image");
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -501,7 +501,7 @@ public class SubmitActivity extends ActionBarActivity {
             if (result.equals("Continue")){
                 System.out.println("Continued");
                 intent = new Intent(SubmitActivity.this, DisplayMessageActivity.class);
-                intent.putExtra("url", "http://comcastideas-interns.azurewebsites.net/api/idea/" + idea.getId());
+                intent.putExtra("url", "http://rossette9-001-site1.mywindowshosting.com/api/idea/" + idea.getId());
                 if(ideaImages.getFirst() == null) {
                     Toast.makeText(SubmitActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
                     startActivity(intent);

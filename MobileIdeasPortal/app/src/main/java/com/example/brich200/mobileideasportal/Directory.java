@@ -132,7 +132,7 @@ public class Directory extends ActionBarActivity {
             if (asynchTaskType.equals("Load")) {
                 System.out.println("Asynch Task: Loading");
                 try {
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea");
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -212,7 +212,7 @@ public class Directory extends ActionBarActivity {
             } else if (asynchTaskType.equals("Vote")) {
                 System.out.println("Asynch Task: Voting");
                 try {
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + currentIdea + "?voteUp=" + vote);
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + currentIdea + "?voteUp=" + vote);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("PUT");
                     conn.setRequestProperty("Accept", "application/json");

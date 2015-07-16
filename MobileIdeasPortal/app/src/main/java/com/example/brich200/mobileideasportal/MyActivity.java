@@ -35,7 +35,7 @@ public class MyActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
-        urlString = "http://comcastideas-interns.azurewebsites.net/api/idea";
+        urlString = "http://rossette9-001-site1.mywindowshosting.com/api/idea";
     }
 
     @Override

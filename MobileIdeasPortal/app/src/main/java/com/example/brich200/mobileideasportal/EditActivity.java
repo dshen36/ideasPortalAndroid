@@ -67,7 +67,7 @@ public class EditActivity extends ActionBarActivity {
 
 
 
-    private String baseUrl = "http://comcastideas-interns.azurewebsites.net/api";
+    private String baseUrl = "http://rossette9-001-site1.mywindowshosting.com/api";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +124,7 @@ public class EditActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 asynchTaskType = "Search";
-                urlString = "http://comcastideas-interns.azurewebsites.net/api/idea?searchQuery=" + query + "&searchParamater=Title";
+                urlString = "http://rossette9-001-site1.mywindowshosting.com/api/idea?searchQuery=" + query + "&searchParamater=Title";
                 System.out.println(urlString);
                 new CallAPI().execute("value");
                 return false;
@@ -299,7 +299,7 @@ public class EditActivity extends ActionBarActivity {
                     try {
 
                         Intent intent = getIntent();
-                        url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + intent.getIntExtra("id",-1));
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + intent.getIntExtra("id",-1));
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setDoOutput(true);
                         conn.setRequestMethod("PUT");
@@ -342,7 +342,7 @@ public class EditActivity extends ActionBarActivity {
                 try {
                     System.out.println("Loading Edit Activity");
                     Intent intent = getIntent();
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + intent.getIntExtra("id",-1));
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + intent.getIntExtra("id",-1));
                     //url = new URL(url, "/" + idea.getId());
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -399,7 +399,7 @@ public class EditActivity extends ActionBarActivity {
             } else if (asynchTaskType.equals("Delete")){
                 try {
                     Intent intent = getIntent();
-                    url = new URL("http://comcastideas-interns.azurewebsites.net/api/idea/" + intent.getIntExtra("id",-1));
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + intent.getIntExtra("id",-1));
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setDoOutput(true);
                     conn.setRequestMethod("DELETE");
