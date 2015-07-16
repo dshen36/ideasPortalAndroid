@@ -95,6 +95,8 @@ public class SubmitActivity extends ActionBarActivity {
         teamEmail = (EditText) findViewById(R.id.edit_team_email);
         orgaization = (EditText) findViewById(R.id.edit_organization);
 
+        email.setText(CredentialHolder.getInstance(this).getUserEmail());
+
         self_service = (CheckBox) findViewById(R.id.self_Service);
         call_deflection = (CheckBox) findViewById(R.id.call_deflection);
         agent_contact = (CheckBox) findViewById(R.id.agent_contact);
