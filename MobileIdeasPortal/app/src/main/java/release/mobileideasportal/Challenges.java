@@ -1,7 +1,6 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,44 +8,54 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SearchView;
 import android.widget.Spinner;
 
-import com.example.brich200.mobileideasportal.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-
-public class SuccessStoriesMain extends ActionBarActivity {
+public class Challenges extends ActionBarActivity {
 
     String asynchTaskType;
     int[] availableIds;
     Spinner dropDownSpinner;
     String[] subMenus = {"Menu","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String urlString;
+    SearchView searchIdeas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_success_stories_main);
+        setContentView(R.layout.activity_challenges);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+
+        searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
+        searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                asynchTaskType = "Search";
+                urlString = "http://rossette9-001-site1.mywindowshosting.com/api/idea?searchQuery=" + query + "&searchParamater=Title";
+                Intent intent = new Intent(Challenges.this, Directory.class);
+                intent.putExtra("url", urlString);
+                startActivity(intent);
+                /*System.out.println(urlString);
+                new CallAPI().execute("value");*/
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_success_stories_main, menu);
+        getMenuInflater().inflate(R.menu.menu_partners, menu);
         return true;
     }
 
@@ -70,15 +79,15 @@ public class SuccessStoriesMain extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                startActivity(new Intent(SuccessStoriesMain.this, Directory.class));
+                startActivity(new Intent(Challenges.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
-                startActivity(new Intent(SuccessStoriesMain.this, Partners.class));
+                startActivity(new Intent(Challenges.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
-                startActivity(new Intent(SuccessStoriesMain.this, SuccessStoriesMain.class));
+                startActivity(new Intent(Challenges.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
-                startActivity(new Intent(SuccessStoriesMain.this, Challenges.class));
+                startActivity(new Intent(Challenges.this, Challenges.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
-                startActivity(new Intent(SuccessStoriesMain.this, LabWeekDirectory.class));
+                startActivity(new Intent(Challenges.this, LabWeekDirectory.class));
             }
         }
 

@@ -1,4 +1,4 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
 import android.view.View;
 

@@ -1,6 +1,5 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 /**

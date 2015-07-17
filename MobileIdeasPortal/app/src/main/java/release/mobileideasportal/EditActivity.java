@@ -1,21 +1,16 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SearchView;
@@ -26,55 +21,45 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 
-public class SubmitActivity extends ActionBarActivity {
+public class EditActivity extends ActionBarActivity {
 
-    EditText title, tags, issue, description, customerExperience, editOther, email, teamEmail, orgaization;
+    EditText title, tags, issue, description, customerExperience, editOther, email, teamEmail;
     CheckBox self_service, call_deflection, agent_contact, call_resolution, rework, avoidable_truck, upstream_downstream, cost_savings, other;
 
     Spinner dropDownSpinner;
-    String[] subMenus = {"Menu","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String[] subMenus = {"Menu", "Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
 
     private static int RESULT_LOAD_IMAGE = 1;
 
+    String asynchTaskType, urlString;
+
     Idea idea;
-    byte[] imageArray;
-    ArrayList<byte[]> arrayOfImages;
-    IdeaImages ideaImages;
 
     int[] availableIds;
     SearchView searchIdeas;
-    String asynchTaskType, urlString;
     Intent intent;
+
+    URL url;
+
+    Button delete, cancel;
+
+
 
     private String baseUrl = "http://rossette9-001-site1.mywindowshosting.com/api";
 
@@ -93,9 +78,6 @@ public class SubmitActivity extends ActionBarActivity {
         editOther = (EditText) findViewById(R.id.edit_other);
         email = (EditText) findViewById(R.id.edit_email);
         teamEmail = (EditText) findViewById(R.id.edit_team_email);
-        orgaization = (EditText) findViewById(R.id.edit_organization);
-
-        email.setText(CredentialHolder.getInstance(this).getUserEmail());
 
         self_service = (CheckBox) findViewById(R.id.self_Service);
         call_deflection = (CheckBox) findViewById(R.id.call_deflection);
@@ -107,14 +89,29 @@ public class SubmitActivity extends ActionBarActivity {
         cost_savings = (CheckBox) findViewById(R.id.cost_savings);
         other = (CheckBox) findViewById(R.id.other);
 
+        delete = (Button) findViewById(R.id.deleteIdea);
+        delete.setVisibility(View.VISIBLE);
+        cancel = (Button) findViewById(R.id.cancel_button);
+        cancel.setVisibility(View.VISIBLE);
+
+
+        idea = new Idea();
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,subMenus);
 
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
 
-        arrayOfImages = new ArrayList<byte[]>();
-        ideaImages = new IdeaImages();
+        idea.setId(getIntent().getIntExtra("id", -1));
+        System.out.println("Id: " + idea.getId());
+        if(idea.getId() == -1) {
+            finish();
+        } else {
+            System.out.println("Start API");
+            asynchTaskType = "Load";
+            new CallAPI().execute("Load");
+        }
 
         searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
         searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -122,8 +119,11 @@ public class SubmitActivity extends ActionBarActivity {
             public boolean onQueryTextSubmit(String query) {
                 asynchTaskType = "Search";
                 urlString = "http://rossette9-001-site1.mywindowshosting.com/api/idea?searchQuery=" + query + "&searchParamater=Title";
-                System.out.println(urlString);
-                new CallAPI().execute("value");
+                Intent intent = new Intent(EditActivity.this, Directory.class);
+                intent.putExtra("url", urlString);
+                startActivity(intent);
+                /*System.out.println(urlString);
+                new CallAPI().execute("value");*/
                 return false;
             }
 
@@ -132,6 +132,7 @@ public class SubmitActivity extends ActionBarActivity {
                 return false;
             }
         });
+
 
         Button buttonLoadImage = (Button) findViewById(R.id.buttonLoadPicture);
         buttonLoadImage.setOnClickListener(new View.OnClickListener() {
@@ -165,40 +166,6 @@ public class SubmitActivity extends ActionBarActivity {
 
             ImageView imageView = (ImageView) findViewById(R.id.imgView);
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(bitmap.getByteCount());
-            bitmap.copyPixelsFromBuffer(byteBuffer);
-            imageArray = byteBuffer.array();
-//            Bitmap bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.RGB_565);
-            //Bitmap bitmap=BitmapFactory.decodeResource(getResources(), R.id.imgView);
-//            //Bitmap bitmap = imageView.getDrawingCache();
-//            ByteArrayOutputStream stream=new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
-            //imageArray = stream.toByteArray();
-           /* ImageView imageView = (ImageView) findViewById(R.id.imgView);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-            Bitmap bm = imageView.getDrawingCache();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            imageArray = stream.toByteArray();*/
-            /*ImageView imageView = (ImageView) findViewById(R.id.imgView);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-            Drawable drawable = imageView.getDrawable();
-            Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
-            imageArray = stream.toByteArray();*/
-            /*ImageView imageView2 = (ImageView) findViewById(R.id.imgView2);
-            System.out.println("Image array:  " + Arrays.toString(imageArray));
-            Bitmap bmp = BitmapFactory.decodeByteArray(imageArray, 0, imageArray.length);
-            imageView2.setImageBitmap(bmp);*/
-            //BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-            /*Bitmap bitmap = imageView.getDrawingCache();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);*/
-            //imageArray = stream.toByteArray();
-            //arrayOfImages.add(imageArray);
-            ideaImages.addImage(imageArray);
 
         }
 
@@ -228,7 +195,6 @@ public class SubmitActivity extends ActionBarActivity {
     }
 
     public void submitIdea(View view) {
-        idea = new Idea();
         if(checkEmails(email.getText().toString(), teamEmail.getText().toString())) {
             idea.setTitle(title.getText().toString());
             System.out.println("New Title: " + idea.getTitle());
@@ -241,12 +207,11 @@ public class SubmitActivity extends ActionBarActivity {
             idea.setAdditionalTeamMemberEmail(teamEmail.getText().toString());
             idea.setStatus(1);
             idea.setIntelectualPropertyStatus(1);
-            //idea.set(imageArray);
 
             asynchTaskType = "Submit";
             new CallAPI().execute("Submit");
         } else {
-            Toast.makeText(SubmitActivity.this, "Invalid Email or Additional Email, Please Ensure They Are Correct @cable.comcast.com Emails", Toast.LENGTH_LONG).show();
+            Toast.makeText(EditActivity.this, "Invalid Email or Additional Email, Please Ensure They Are Correct @cable.comcast.com Emails", Toast.LENGTH_LONG).show();
         }
         //startActivity(new Intent(SubmitActivity.this, DisplayMessageActivity.class));
     }
@@ -295,17 +260,15 @@ public class SubmitActivity extends ActionBarActivity {
         return metricsImpact;
     }
 
-    public void viewExistingIdeas(View view) {
-        asynchTaskType = "Newest Ideas";
-        new CallAPI().execute("Newest Ideas");
-    }
-
     private class CallAPI extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... params) {
+            System.out.println("In do in background");
+            System.out.println(asynchTaskType);
 
             if(asynchTaskType.equals("Submit")) {
+
                 String ideaString = "";
                 if (!idea.getTitle().equals("") && !idea.getMetricsImpact().equals("") && idea.getStatus() != -1 && idea.getIntelectualPropertyStatus() != -1 && !idea.getEmail().equals("")) {
                     ideaString = ideaString.concat(String.format("{\"Title\":\"%s\"", idea.getTitle()));
@@ -333,17 +296,18 @@ public class SubmitActivity extends ActionBarActivity {
 
                     try {
 
-                        URL url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
+                        Intent intent = getIntent();
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + intent.getIntExtra("id",-1));
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setDoOutput(true);
-                        conn.setRequestMethod("POST");
+                        conn.setRequestMethod("PUT");
                         conn.setRequestProperty("Content-Type", "application/json");
 
                         OutputStream os = conn.getOutputStream();
                         os.write(ideaString.getBytes());
                         os.flush();
 
-                        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+                        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                             throw new RuntimeException("Failed : HTTP error code : "
                                     + conn.getResponseCode());
                         }
@@ -352,19 +316,9 @@ public class SubmitActivity extends ActionBarActivity {
                                 (conn.getInputStream())));
 
                         String output;
-                        String jsonText = "";
                         System.out.println("Output from Server .... \n");
                         while ((output = br.readLine()) != null) {
-                            jsonText = jsonText + output;
-                        }
-
-                        System.out.println(jsonText);
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(jsonText);
-                            idea.setId(jsonObject.getInt("Id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            System.out.println(output);
                         }
 
                         conn.disconnect();
@@ -382,14 +336,92 @@ public class SubmitActivity extends ActionBarActivity {
                 } else {
                     return "Fail";
                 }
-            } else if(asynchTaskType.equals("Search") || asynchTaskType.equals("Newest Ideas")){
+            } else if (asynchTaskType.equals("Load")){
+                try {
+                    System.out.println("Loading Edit Activity");
+                    Intent intent = getIntent();
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + intent.getIntExtra("id",-1));
+                    //url = new URL(url, "/" + idea.getId());
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept", "application/json");
+
+
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getInputStream())));
+
+                    String output;
+                    String jsonText = "";
+                    InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+                    System.out.println("Output from Server .... \n");
+                    while ((output = br.readLine()) != null) {
+                        jsonText = jsonText + output;
+                    }
+                    //jsonText= jsonText.substring(1, jsonText.length()-1);
+                    System.out.println(jsonText);
+                    try {
+                        JSONObject jsonObject = new JSONObject(jsonText);
+                        idea.setTitle(jsonObject.getString("Title"));
+                        idea.setTags(jsonObject.getString("Tags"));
+                        idea.setIssue(jsonObject.getString("Issue"));
+                        idea.setDescription(jsonObject.getString("Description"));
+                        idea.setCustomerExperienceImpact(jsonObject.getString("CustomerExperienceImpact"));
+                        idea.setMetricsImpact(jsonObject.getString("MetricsImpact"));
+                        idea.setStatus(jsonObject.getInt("Status"));
+                        idea.setIntelectualPropertyStatus(jsonObject.getInt("IntellectualPropertyStatus"));
+                        idea.setEmail(jsonObject.getString("Email"));
+                        idea.setAdditionalTeamMemberEmail(jsonObject.getString("AdditionalTeamMemberEmail"));
+                        idea.setId(jsonObject.getInt("Id"));
+                        idea.setUpvotes((jsonObject.getInt("Votes")));
+                        idea.setLastModified(jsonObject.getString("LastModified"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    conn.disconnect();
+
+                } catch (MalformedURLException e) {
+
+                    e.printStackTrace();
+
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+
+                }
+            } else if (asynchTaskType.equals("Delete")){
+                try {
+                    Intent intent = getIntent();
+                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea/" + intent.getIntExtra("id",-1));
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoOutput(true);
+                    conn.setRequestMethod("DELETE");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed : HTTP error code : "
+                                + conn.getResponseCode());
+                    }
+                    conn.disconnect();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (ProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return ("Deleted");
+            } else if (asynchTaskType.equals("Cancel")){
+                return "Canceled";
+            }else if(asynchTaskType.equals("Search")){
                 URL url = null;
                 try {
-                    if (asynchTaskType.equals("Search")) {
-                        url = new URL(urlString);
-                    } else if (asynchTaskType.equals("Newest Ideas")) {
-                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
-                    }
+
+                    url = new URL(urlString);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -418,7 +450,7 @@ public class SubmitActivity extends ActionBarActivity {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         availableIds[i] = jsonObject.getInt("Id");
                     }
-                    intent = new Intent(SubmitActivity.this, Directory.class);
+                    intent = new Intent(EditActivity.this, DisplayMessageActivity.class);
                     intent.putExtra("availableIds", availableIds);
 
 
@@ -433,103 +465,111 @@ public class SubmitActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
                 return "Searched";
-            } else if (asynchTaskType.equals("Add Images")) {
-                IdeaImages imagesToUpload = ideaImages;
-                System.out.println("Adding images to Idea#:" + idea.getId());
-                try {
-                    System.out.println("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + idea.getId());
-                    URL url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + idea.getId());
-                    while (imagesToUpload.getFirst() != null) {
-                        System.out.println("Uploading an image");
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-                        StringBuilder parameters = new StringBuilder();
-                        parameters.append(URLEncoder.encode(new String(ideaImages.getFirstImage()), "UTF-16"));
-
-                        conn.setDoOutput(true);
-                        conn.setRequestMethod("POST");
-                        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-                        conn.setRequestProperty("charset", "UTF-16");
-                        conn.setRequestProperty("Content-Length",Integer.toString(parameters.toString().getBytes().length));
-
-                        byte[] byteArray = ideaImages.getFirstImage();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream(byteArray.length);
-                        baos.write(byteArray, 0, byteArray.length);
-                        baos.flush();
-                        baos.close();
-                        System.out.println(byteArray.toString());
-                        /*DataOutputStream wr = new DataOutputStream(conn.getOutputStream ());
-                        wr.writeBytes(parameters.toString());
-                        wr.flush();
-                        wr.close();*/
-
-                        if (conn.getResponseCode() != 200) {
-                            throw new RuntimeException("Failed : HTTP error code : "
-                                    + conn.getResponseCode());
-                        }
-
-                        BufferedReader br = new BufferedReader(new InputStreamReader(
-                                (conn.getInputStream())));
-
-                        String output;
-                        String byteArrayText = "";
-                        System.out.println("Output from Server .... \n");
-                        while ((output = br.readLine()) != null) {
-                            byteArrayText = byteArrayText + output;
-                        }
-
-                        System.out.println(byteArrayText);
-
-                        conn.disconnect();
-
-                        imagesToUpload.setFirstToNext();
-                    }
-                    System.out.println("Finished adding images");
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return "Images Added";
             }
-            return null;
+            return "LoadDone";
         }
 
         protected void onPostExecute(String result) {
             System.out.println("PostExecute");
             if (result.equals("Continue")){
                 System.out.println("Continued");
-                intent = new Intent(SubmitActivity.this, DisplayMessageActivity.class);
-                intent.putExtra("url", "http://rossette9-001-site1.mywindowshosting.com/api/idea/" + idea.getId());
-                if(ideaImages.getFirst() == null) {
-                    Toast.makeText(SubmitActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-                } else {
-                    asynchTaskType = "Add Images";
-                    new CallAPI().execute("Add Images");
-                }
+                Toast.makeText(EditActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
+                //setResult(RESULT_OK, new Intent(EditActivity.this, DisplayMessageActivity.class));
+                //finish();
+                startActivity(new Intent(EditActivity.this, DisplayMessageActivity.class));
             } else if (result.equals("Fail")) {
                 System.out.println("Failed");
-                Toast.makeText(SubmitActivity.this,"Missing Fields, Please Give Your Idea A Title and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditActivity.this,"Missing Fields, Please Give Your Idea A Title and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
+                //setResult(RESULT_CANCELED, new Intent(EditActivity.this, DisplayMessageActivity.class));
+                //finish();
                 return;
+            } else if (result.equals("LoadDone")) {
+                System.out.println("LoadDone");
+                updateEditTexts();
+            } else if (result.equals("Deleted")){
+                System.out.println("Deleted");
+                startActivity(new Intent(EditActivity.this, MyActivity.class));
+            } else if (result.equals("Canceled")){
+                Intent intent = new Intent(EditActivity.this, DisplayMessageActivity.class);
+                intent.putExtra("url", url.toString());
+                startActivity(intent);
             } else if(result.equals("Searched")) {
                 startActivity(intent);
-            } else if(result.equals("Images Added")) {
-                Toast.makeText(SubmitActivity.this, "Idea Submitted", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(intent));
-            } else {
-                System.out.println("Else");
             }
 
         }
 
     }
 
+    private void updateEditTexts() {
+        title.setText(idea.getTitle());
+        tags.setText(idea.getTags());
+        issue.setText(idea.getIssue());
+        description.setText(idea.getDescription());
+        customerExperience.setText(idea.getCustomerExperienceImpact());
+        setCheckboxes();
+        email.setText(idea.getEmail());
+        teamEmail.setText(idea.getAdditionalTeamMemberEmail());
+
+    }
+
+    private void setCheckboxes() {
+        String metrics = idea.getMetricsImpact();
+        if(metrics.contains("Improved Self-Service")){
+            metrics = metrics.replace("Improved Self-Service", "");
+            self_service.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Call Deflection/Avoidance")){
+            metrics = metrics.replace("Call Deflection/Avoidance","");
+            call_deflection.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Agent Contact Rate")){
+            metrics = metrics.replace("Agent Contact Rate","");
+            agent_contact.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("First Call Resolution")){
+            metrics = metrics.replace("First Call Resolution","");
+            call_resolution.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Rework")){
+            metrics = metrics.replace("Rework","");
+            rework.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Avoidable Truck Rolls")){
+            metrics = metrics.replace("Avoidable Truck Rolls","");
+            avoidable_truck.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Upstream/Downstream Transmit")){
+            metrics = metrics.replace("Upstream/Downstream Transmit","");
+            upstream_downstream.setChecked(true);
+        }
+        if(idea.getMetricsImpact().contains("Cost Savings")){
+            metrics = metrics.replace("Cost Savings","");
+            cost_savings.setChecked(true);
+        }
+        if(!metrics.isEmpty()){
+            while(metrics.length() != 0 && metrics.charAt(0)==' '){
+                metrics = metrics.substring(1);
+            }
+            if(!metrics.isEmpty()) {
+                other.setChecked(true);
+                editOther.setText(metrics);
+            }
+        }
+    }
+
+    public void deleteIdea(View view) {
+        asynchTaskType = "Delete";
+        new CallAPI().execute("Delete");
+    }
+
     public void createIdea(View view) {
-        startActivity(new Intent(SubmitActivity.this,SubmitActivity.class));
+        startActivity(new Intent(EditActivity.this, SubmitActivity.class));
+    }
+
+    public void cancel(View view) {
+        asynchTaskType = "Cancel";
+        new CallAPI().execute("Cancel");
     }
 
     public boolean checkEmails(String email, String teamEmails){
@@ -562,22 +602,22 @@ public class SubmitActivity extends ActionBarActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(parent.getItemAtPosition(position).toString());
             if (parent.getItemAtPosition(position).toString().equals("Ideas")) {
-                viewExistingIdeas(dropDownSpinner);
+                startActivity(new Intent(EditActivity.this, Directory.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Partners")) {
-                startActivity(new Intent(SubmitActivity.this, Partners.class));
+                startActivity(new Intent(EditActivity.this, Partners.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Success Stories")) {
-                startActivity(new Intent(SubmitActivity.this, SuccessStoriesMain.class));
+                startActivity(new Intent(EditActivity.this, SuccessStoriesMain.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Challenges")) {
-                startActivity(new Intent(SubmitActivity.this, Challenges.class));
+                startActivity(new Intent(EditActivity.this, Challenges.class));
             } else if (parent.getItemAtPosition(position).toString().equals("Lab Weeks")) {
-                startActivity(new Intent(SubmitActivity.this, LabWeekDirectory.class));
+                startActivity(new Intent(EditActivity.this, LabWeekDirectory.class));
             }
         }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                dropDownSpinner.setOnItemSelectedListener(spinnerListener);
-            }
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+        }
 
     };
 

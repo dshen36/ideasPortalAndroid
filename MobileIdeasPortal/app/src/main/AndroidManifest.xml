@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.brich200.mobileideasportal" >
+    package="release.mobileideasportal" >
 
     <uses-sdk android:minSdkVersion="11" />
 
@@ -30,7 +30,7 @@
             android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.brich200.mobileideasportal.MyActivity" />
+                android:value="release.mobileideasportal.MyActivity" />
         </activity>
         <activity
             android:name=".SubmitActivity"

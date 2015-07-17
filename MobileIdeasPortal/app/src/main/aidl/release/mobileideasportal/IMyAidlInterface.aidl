@@ -1,5 +1,5 @@
 // IMyAidlInterface.aidl
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
 // Declare any non-default types here with import statements
 

@@ -1,6 +1,5 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
-import android.content.Context;
 import android.view.View;
 
 import java.util.ArrayList;

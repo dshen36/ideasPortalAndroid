@@ -1,6 +1,5 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,10 +17,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,10 +35,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Pattern;
 
 
 public class DisplayMessageActivity extends ActionBarActivity {
@@ -83,6 +78,8 @@ public class DisplayMessageActivity extends ActionBarActivity {
     boolean vote;
 
     CredentialHolder credentialHolder;
+    String urlString;
+    SearchView searchIdeas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +118,27 @@ public class DisplayMessageActivity extends ActionBarActivity {
         dropDownSpinner = (Spinner) findViewById(R.id.spinner);
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
+
+        searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
+        searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                asynchTaskType = "Search";
+                urlString = "http://rossette9-001-site1.mywindowshosting.com/api/idea?searchQuery=" + query + "&searchParamater=Title";
+                Intent intent = new Intent(DisplayMessageActivity.this, Directory.class);
+                intent.putExtra("url", urlString);
+                startActivity(intent);
+                /*System.out.println(urlString);
+                new CallAPI().execute("value");*/
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
 
         availableIds = getIntent().getIntArrayExtra("Available Ids");
 
@@ -549,7 +567,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
             ideaHolder.removeView(image);
         }
         if(!credentialHolder.getUserEmail().equals(idea.getEmail())) {
-            if(editContents.getParent().equals(buttons)) {
+            if(editContents.getParent()!= null && editContents.getParent().equals(buttons)) {
                 buttons.removeView(editContents);
             }
         } else {

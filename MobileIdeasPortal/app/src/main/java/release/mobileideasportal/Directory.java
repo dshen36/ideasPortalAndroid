@@ -1,4 +1,4 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,14 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.example.brich200.mobileideasportal.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,12 +35,18 @@ public class Directory extends ActionBarActivity {
     int[] availableIds;
     Spinner dropDownSpinner;
     String[] subMenus = {"Menu","Ideas","Lab Weeks","Challenges","Partners","Success Stories"};
+    String urlString;
+    SearchView searchIdeas;
     GridLayout singleIdea;
     LinearLayout ideaLayout;
     Idea idea;
     URL url;
     InflateIdeaView [] inflatedIdeas;
     boolean vote, canVote;
+
+    int page = -1;
+
+    Button nextPage, previousPage;
 
     int currentIdea;
     @Override
@@ -59,6 +63,30 @@ public class Directory extends ActionBarActivity {
         dropDownSpinner.setAdapter(adapter);
         dropDownSpinner.setOnItemSelectedListener(spinnerListener);
         idea = new Idea();
+
+        nextPage = (Button) findViewById(R.id.nextPage);
+        previousPage = (Button) findViewById(R.id.previousPage);
+
+        searchIdeas = (SearchView) findViewById(R.id.ideaSearch);
+        searchIdeas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                asynchTaskType = "Search";
+                urlString = "http://rossette9-001-site1.mywindowshosting.com/api/idea?searchQuery=" + query + "&searchParamater=Title";
+                Intent intent = new Intent(Directory.this, Directory.class);
+                intent.putExtra("url", urlString);
+                startActivity(intent);
+                /*System.out.println(urlString);
+                new CallAPI().execute("value");*/
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
 
         asynchTaskType = "Load";
         new CallAPI().execute("Load");
@@ -118,6 +146,19 @@ public class Directory extends ActionBarActivity {
         startActivity(new Intent(this, SubmitActivity.class));
     }
 
+    public void nextPage(View view) {
+        asynchTaskType = "LoadMore";
+        page++;
+        new CallAPI().execute("LoadMore");
+    }
+
+    public void previousPage(View view) {
+        asynchTaskType = "LoadMore";
+        page--;
+        System.out.println(page + "");
+        new CallAPI().execute("LoadMore");
+    }
+
     private class CallAPI extends AsyncTask<String, String, String> {
 
         @Override
@@ -129,10 +170,18 @@ public class Directory extends ActionBarActivity {
             InputStream in = null;*/
 
             // HTTP Get
-            if (asynchTaskType.equals("Load")) {
+            if (asynchTaskType.equals("Load") || asynchTaskType.equals("LoadMore")) {
                 System.out.println("Asynch Task: Loading");
                 try {
-                    url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
+                    if (asynchTaskType.equals("LoadMore")){
+                        System.out.println(getIntent().getStringExtra("url") + "&page=" + page);
+                        url = new URL(getIntent().getStringExtra("url") + "&page=" + page);
+                    } else if(getIntent() != null && getIntent().getStringExtra("url") != null  && !getIntent().getStringExtra("url").equals("")){
+                        url = new URL(getIntent().getStringExtra("url"));
+                        page = 1;
+                    } else {
+                        url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/idea");
+                    }
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "application/json");
@@ -249,7 +298,16 @@ public class Directory extends ActionBarActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
+            control.removeAllViews();
             inflateIdeas();
+            if(getIntent().getStringExtra("url") != null  && !getIntent().getStringExtra("url").equals("") && control.getChildCount() == 10) {
+                control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
+                control.addView(nextPage);
+            }
+            if(page > 1) {
+                control.addView(previousPage);
+            }
             canVote = true;
         }
     }
@@ -257,7 +315,6 @@ public class Directory extends ActionBarActivity {
     private void inflateIdeas() {
 
         LinearLayout control = (LinearLayout) findViewById(R.id.singleIdeaLayout);
-        control.removeAllViews();
         for(int i = 0; i < inflatedIdeas.length; ++i) {
             LayoutInflater l = getLayoutInflater();
             View v = l.inflate(R.layout.single_idea, control, false);

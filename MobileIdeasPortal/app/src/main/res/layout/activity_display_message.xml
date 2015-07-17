@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.brich200.mobileideasportal.SubmitActivity"
+    tools:context="release.mobileideasportal.SubmitActivity"
     android:orientation="horizontal"
     android:id="@+id/layout">
 
@@ -127,13 +127,13 @@
                         android:layout_gravity="center_horizontal"
                         android:background="@android:color/holo_orange_light"
                         android:onClick="createIdea"/>
-                    <ImageButton
+                    <SearchView
                         android:src="@drawable/magnifying_glass"
                         android:layout_width="wrap_content"
                         android:layout_height="31dp"
                         android:background="#a8a8a8"
                         android:layout_gravity="center_horizontal"
-                        android:onClick="searchIdentifier"
+
                         android:id="@+id/ideaSearch"/>
                 </LinearLayout>
             </GridLayout>

@@ -1,4 +1,4 @@
-package com.example.brich200.mobileideasportal;
+package release.mobileideasportal;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -23,7 +23,7 @@ import java.net.URL;
 
 
 public class MyActivity extends ActionBarActivity {
-    public final static String EXTRA_MESSAGE = "com.example.brich200.myfirstapp.MESSAGE";
+    public final static String EXTRA_MESSAGE = "release.myfirstapp.MESSAGE";
     String asynchTaskType;
     int [] availableIds;
     Intent intent;
@@ -109,6 +109,7 @@ public class MyActivity extends ActionBarActivity {
                     }
                     intent = new Intent(MyActivity.this, Directory.class);
                     //intent = new Intent(MyActivity.this, DisplayMessageActivity.class);
+                    intent.putExtra("url","");
                     intent.putExtra("availableIds", availableIds);
 
 
