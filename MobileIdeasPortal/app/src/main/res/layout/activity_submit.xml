@@ -310,7 +310,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Current Issue or Opportunity**"
+                android:text="Current Issue or Opportunity"
                 android:textStyle="bold"
                 android:id="@+id/textView4" />
 
@@ -328,7 +328,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Description**"
+                android:text="Description"
                 android:textStyle="bold"
                 android:id="@+id/textView5" />
 
@@ -364,7 +364,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:text="Metrics Impact"/>
+                android:text="Metrics Impact**"/>
 
             <CheckBox
                 android:layout_width="wrap_content"

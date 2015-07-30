@@ -56,6 +56,6 @@ public class Login extends ActionBarActivity {
     }
 
     public static boolean testEmail(String email){
-        return email.matches("[a-zA-Z]+(((\\-)|[._a-zA-Z0-9])*)@cable.comcast.com")||email.matches("");
+        return email.matches("[a-zA-Z0-9]+(((\\-)|[._a-zA-Z0-9])*)@cable.comcast.com")||email.matches("");
     }
 }

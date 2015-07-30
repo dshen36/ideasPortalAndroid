@@ -11,15 +11,14 @@
 
     <string name="action_search">Action Bar</string>
     <string name="title_activity_submit">Submit Activity</string>
-    <string name="title_activity_cx_inovation_main">CxInovationMain</string>
-    <string name="title_activity_cx_innovation_main">CxInnovationMain</string>
+    <string name="title_activity_cx_innovation_main">Cx Innovation</string>
     <string name="title_activity_directory">Directory</string>
-    <string name="title_activity_success_stories_main">SuccessStoriesMain</string>
+    <string name="title_activity_success_stories_main">Success Stories</string>
     <string name="title_activity_partners">Partners</string>
     <string name="labweek"><u>Lab Week March 2015 Partners</u></string>
     <string name="pastPartners"><u>Past Partners</u></string>
     <string name="title_activity_challenges">Challenges</string>
-    <string name="title_activity_login">Login</string>
-    <string name="title_activity_lab_week_directory">LabWeekDirectory</string>
+    <string name="title_activity_login">Mobile Ideas Portal</string>
+    <string name="title_activity_lab_week_directory">Lab Week Directory</string>
 
 </resources>

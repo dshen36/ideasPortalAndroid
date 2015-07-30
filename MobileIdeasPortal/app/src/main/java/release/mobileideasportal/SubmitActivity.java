@@ -296,7 +296,7 @@ public class SubmitActivity extends ActionBarActivity {
 
             if(asynchTaskType.equals("Submit")) {
                 String ideaString = "";
-                if (!idea.getTitle().equals("") && !idea.getMetricsImpact().equals("") && idea.getStatus() != -1 && idea.getIntelectualPropertyStatus() != -1 && !idea.getEmail().equals("")) {
+                if (!idea.getTitle().equals("") && !idea.getDescription().equals("") && !idea.getMetricsImpact().equals("") && idea.getStatus() != -1 && idea.getIntelectualPropertyStatus() != -1 && !idea.getEmail().equals("")) {
                     ideaString = ideaString.concat(String.format("{\"Title\":\"%s\"", idea.getTitle()));
                     if (!idea.getTags().equals("")) {
                         ideaString = ideaString.concat(String.format(",\"Tags\":\"%s\"", idea.getTags()));
@@ -426,7 +426,7 @@ public class SubmitActivity extends ActionBarActivity {
                 }
                 return "Searched";
             } else if (asynchTaskType.equals("Add Images")) {
-                IdeaImages imagesToUpload = ideaImages;
+                /*IdeaImages imagesToUpload = ideaImages;
                 System.out.println("Adding images to Idea#:" + idea.getId());
                 try {
                     System.out.println("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + idea.getId());
@@ -451,10 +451,10 @@ public class SubmitActivity extends ActionBarActivity {
                         baos.flush();
                         baos.close();
                         System.out.println(byteArray.toString());
-                        /*DataOutputStream wr = new DataOutputStream(conn.getOutputStream ());
+                        *//*DataOutputStream wr = new DataOutputStream(conn.getOutputStream ());
                         wr.writeBytes(parameters.toString());
                         wr.flush();
-                        wr.close();*/
+                        wr.close();*//*
 
                         if (conn.getResponseCode() != 200) {
                             throw new RuntimeException("Failed : HTTP error code : "
@@ -484,7 +484,7 @@ public class SubmitActivity extends ActionBarActivity {
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
                 return "Images Added";
             }
             return null;
@@ -505,7 +505,7 @@ public class SubmitActivity extends ActionBarActivity {
                 }
             } else if (result.equals("Fail")) {
                 System.out.println("Failed");
-                Toast.makeText(SubmitActivity.this,"Missing Fields, Please Give Your Idea A Title and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
+                Toast.makeText(SubmitActivity.this,"Missing Fields, Please Give Your Idea A Title, Description and Provide Your Email, and Check At Least One Metrics Impact", Toast.LENGTH_LONG).show();
                 return;
             } else if(result.equals("Searched")) {
                 startActivity(intent);

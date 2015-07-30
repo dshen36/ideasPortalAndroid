@@ -253,18 +253,18 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     }
 
                     conn.disconnect();
-                    System.out.println(idea.getImageIds());
-                    if(!idea.getImageIds().equals("null") || showImage) {/*
+                    /*System.out.println(idea.getImageIds());
+                    if(!idea.getImageIds().equals("null") || showImage) {*//*
                         System.out.println("getting images");
                         String [] nums = idea.getImageIds().split("/^[1-9][0-9]*$/");
                         int[] numbers = new int[nums.length];
                         for(int i = 0; i < nums.length; ++i){
                             numbers[i] = Integer.parseInt(nums[i].trim());
-                        }*/
+                        }*//*
                         url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/Image/1021?imageId=16");
-/*
+*//*
                         url = new URL("http://rossette9-001-site1.mywindowshosting.com/api/Image/" + (availableIds != null ? availableIds[0]:idea.getId()) +"?imageId=" + numbers[0] );
-*/
+*//*
                         conn = (HttpURLConnection) url.openConnection();
                             conn.setRequestMethod("GET");
 
@@ -285,7 +285,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         byte[] response = out.toByteArray();
                         bmp = BitmapFactory.decodeByteArray(response,0,response.length);
                         //image.setImageBitmap(bmp);
-/*
+*//*
                         br = new BufferedReader(new InputStreamReader(
                                 (conn.getInputStream())));
 
@@ -303,20 +303,20 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         System.out.println(imageArray.toString());
                         imageArray = byteArrayText.getBytes();
                         //IdeasImages ideasImages = new IdeasImages
-                        *//*ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        *//**//*ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         byte[] buffer = new byte[1024];
                         int read = 0;
                         while ((read = inputStream.read(buffer, 0, buffer.length)) != -1) {
                             baos.write(buffer, 0, read);
                         }
                         baos.flush();
-                        byte [] imageArray = baos.toByteArray();*//*
+                        byte [] imageArray = baos.toByteArray();*//**//*
                         Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-                        //Bitmap bmp = BitmapFactory.decodeByteArray(imageArray, 0, imageArray.length);*/
-                        /*image = (ImageView) findViewById(R.id.image);
-                        image.setImageBitmap(bmp);*/
+                        //Bitmap bmp = BitmapFactory.decodeByteArray(imageArray, 0, imageArray.length);*//*
+                        *//*image = (ImageView) findViewById(R.id.image);
+                        image.setImageBitmap(bmp);*//*
                         conn.disconnect();
-                    }
+                    }*/
 
                 } catch (MalformedURLException e) {
 
@@ -376,7 +376,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                     }
 
                     conn.disconnect();
-                    System.out.println(idea.getImageIds());
+                    /*System.out.println(idea.getImageIds());
                     if(!idea.getImageIds().equals("null") && firstTime) {
                         showImage = true;
                         System.out.println("getting images");
@@ -400,7 +400,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         }
 
 
-                        /*InputStream inputStream = conn1.getInputStream();
+                        *//*InputStream inputStream = conn1.getInputStream();
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         byte[] buffer = new byte[1024];
                         int read = 0;
@@ -410,7 +410,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         baos.flush();
                         byte [] imageArray = baos.toByteArray();
                         Bitmap bmp = BitmapFactory.decodeByteArray(imageArray, 0, imageArray.length);
-                        image.setImageBitmap(bmp);*/
+                        image.setImageBitmap(bmp);*//*
                         br = new BufferedReader(new InputStreamReader(
                                 (conn1.getInputStream())));
 
@@ -425,7 +425,7 @@ public class DisplayMessageActivity extends ActionBarActivity {
                         conn.disconnect();
                     } else if(!idea.getImageIds().equals("null")) {
                         showImage = true;
-                    }
+                    }*/
 
                 } catch (MalformedURLException e) {
 

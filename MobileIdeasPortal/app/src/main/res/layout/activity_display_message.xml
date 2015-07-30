@@ -127,14 +127,14 @@
                         android:layout_gravity="center_horizontal"
                         android:background="@android:color/holo_orange_light"
                         android:onClick="createIdea"/>
-                    <!--<SearchView-->
-                        <!--android:src="@drawable/magnifying_glass"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="31dp"-->
-                        <!--android:background="#a8a8a8"-->
-                        <!--android:layout_gravity="center_horizontal"-->
+                    <SearchView
+                        android:src="@drawable/magnifying_glass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:background="#a8a8a8"
+                        android:layout_gravity="center_horizontal"
 
-                        <!--android:id="@+id/ideaSearch"/>-->
+                        android:id="@+id/ideaSearch"/>
                 </LinearLayout>
             </GridLayout>
         </GridLayout>
@@ -162,6 +162,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:id="@+id/linearLayout">
+
+
                         <LinearLayout
                             android:id="@+id/title_bar"
                             android:layout_width="match_parent"
@@ -442,37 +444,6 @@
                 android:layout_weight="1"/>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/buttons">
-
-                <Button
-                    android:layout_marginTop="7.5dp"
-                    android:textColor="#e59400"
-                    android:background="#ffdb99"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Edit Contents"
-                    android:onClick="editContents"
-                    android:layout_below="@+id/linearLayout"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:id="@+id/edit_contents"/>
-
-                <Button
-                    android:layout_marginTop="7.5dp"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="#e59400"
-                    android:background="#ffdb99"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Next Idea"
-                    android:onClick="getNextIdea"
-                    android:layout_below="@+id/linearLayout"
-                    android:layout_toRightOf="@id/edit_contents" />
-            </LinearLayout>
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -514,10 +485,43 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="description of the content/comment goes in here"/>
+                            android:text="Description of Comment goes here. i used song lyrics in the example last in the west-coast-interns group just to create filler content"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/buttons">
+
+                <Button
+                    android:layout_marginTop="7.5dp"
+                    android:textColor="#e59400"
+                    android:background="#ffdb99"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Contents"
+                    android:onClick="editContents"
+                    android:layout_below="@+id/linearLayout"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/edit_contents"/>
+
+                <Button
+                    android:layout_marginTop="7.5dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#e59400"
+                    android:background="#ffdb99"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next Idea"
+                    android:onClick="getNextIdea"
+                    android:layout_below="@+id/linearLayout"
+                    android:layout_toRightOf="@id/edit_contents" />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
